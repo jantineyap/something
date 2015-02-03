@@ -12,6 +12,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import android.content.Intent;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -80,6 +82,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             @Override
             public void onClick(View view) {
                 attemptLogin();
+            }
+        });
+
+        Button mCancelButton = (Button) findViewById(R.id.cancel_button);
+        mCancelButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
 
@@ -292,7 +302,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
 
             if (success) {
-                finish();
+                startActivity(new Intent(LoginActivity.this.getBaseContext(), MainActivity.class));
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
