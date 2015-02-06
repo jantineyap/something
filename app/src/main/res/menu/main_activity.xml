@@ -4,7 +4,7 @@
     tools:context="teamanything.com.goonsquad.MainActivity">
     <item android:id="@+id/action_logout" android:title="@string/action_logout"
         android:orderInCategory="1" />
-    <item android:id="@+id/action_example" android:title="@string/action_example" />
+    <item android:id="@+id/action_about" android:title="@string/action_about" />
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100"/>
 </menu>
