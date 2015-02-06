@@ -1,4 +1,4 @@
-package teamanything.com.goonsquad;
+package com.teamanything.goonsquad;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -6,13 +6,11 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-
-import android.content.Intent;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -30,6 +28,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 /**
