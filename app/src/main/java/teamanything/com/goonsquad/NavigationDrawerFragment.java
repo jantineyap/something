@@ -246,7 +246,14 @@ public class NavigationDrawerFragment extends Fragment {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Toast.makeText(getActivity(), "Settings not implemented", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_about:
+                Toast.makeText(getActivity(), "GOONSQUAD!", Toast.LENGTH_SHORT).show();
+                return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
