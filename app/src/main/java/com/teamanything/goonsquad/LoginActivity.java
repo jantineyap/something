@@ -8,6 +8,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -27,8 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
 
 
 /**
@@ -291,7 +293,19 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             }
 
             // TODO: register the new account here.
-            return false;
+
+        }
+
+        protected Boolean registerNewAccount(String mEmail, String mPassword, SharedPreferences loginInfo) {
+            SharedPreferences.Editor editor = loginInfo.edit();
+            String savedAuth = mEmail + ":" + mPassword;
+            String checkEmail = loginInfo.getString(mEmail, null);
+            if (checkEmail == null) {
+                editor.putString(mEmail, mPassword);
+                return editor.commit();
+            } else {
+                return false;
+            }
         }
 
         @Override
