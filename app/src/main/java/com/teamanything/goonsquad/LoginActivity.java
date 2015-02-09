@@ -213,7 +213,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<String>();
+        List<String> emails = new ArrayList<>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             emails.add(cursor.getString(ProfileQuery.ADDRESS));
@@ -242,7 +242,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(LoginActivity.this,
+                new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
@@ -271,23 +271,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             // TODO: attempt authentication against a network service.
             SharedPreferences loginInfo = getSharedPreferences(PREFS_NAME, 0);
             String mCorrectPassword = loginInfo.getString(mEmail, null);
-
-            if (mCorrectPassword != null) {
-                return mPassword.equals(mCorrectPassword);
-            } else { // returned null, login username does not exist
-                return registerNewAccount(mEmail, mPassword, loginInfo);
-            }
-        }
-
-        protected Boolean registerNewAccount(String mEmail, String mPassword, SharedPreferences loginInfo) {
-            SharedPreferences.Editor editor = loginInfo.edit();
-            String checkEmail = loginInfo.getString(mEmail, null);
-            if (checkEmail == null) {
-                editor.putString(mEmail, mPassword);
-                return editor.commit();
-            } else {
-                return false;
-            }
+            return mCorrectPassword != null && mPassword.equals(mCorrectPassword); // username exists && password is correct
         }
 
         @Override
