@@ -22,7 +22,6 @@ public class WelcomeActivity extends ActionBarActivity {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
