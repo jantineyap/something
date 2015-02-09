@@ -289,7 +289,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         protected Boolean registerNewAccount(String mEmail, String mPassword, SharedPreferences loginInfo) {
             SharedPreferences.Editor editor = loginInfo.edit();
-            String savedAuth = mEmail + ":" + mPassword;
             String checkEmail = loginInfo.getString(mEmail, null);
             if (checkEmail == null) {
                 editor.putString(mEmail, mPassword);
