@@ -44,6 +44,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "user:pass", "test@goonsquad.com:sarthvader"
     };
+
+    private static final String PREFS_NAME = "LoginInfo";
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
