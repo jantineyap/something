@@ -22,6 +22,10 @@ public class WelcomeActivity extends ActionBarActivity {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
+    public void openRegistrationActivity(View view) {
+        startActivity(new Intent(this, RegistrationActivity.class));
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
