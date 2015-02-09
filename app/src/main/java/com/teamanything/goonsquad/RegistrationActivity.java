@@ -44,7 +44,7 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
         mPasswordView = (EditText) findViewById(R.id.password_form);
         mPasswordConfirmView = (EditText) findViewById(R.id.password_confirm_form);
 
-        Button mRegisterButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mRegisterButton = (Button) findViewById(R.id.register_button);
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
