@@ -28,9 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 
 
 /**
@@ -276,24 +275,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            SharedPreferences loginInfo = getSharedPreferences(PREFS_NAME, 0);
+            String mCorrectPassword = loginInfo.getString(mEmail, null);
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+            if (mCorrectPassword != null) {
+                return mPassword.equals(mCorrectPassword);
+            } else { // returned null, login username does not exist
+                return registerNewAccount(mEmail, mPassword, loginInfo);
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-
         }
 
         protected Boolean registerNewAccount(String mEmail, String mPassword, SharedPreferences loginInfo) {
