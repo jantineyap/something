@@ -1,4 +1,4 @@
-package database;
+package com.teamanything.goonsquad.database;
 
 /**
  * Created by Jantine on 2/10/2015.

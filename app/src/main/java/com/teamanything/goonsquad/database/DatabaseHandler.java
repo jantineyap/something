@@ -1,4 +1,4 @@
-package database;
+package com.teamanything.goonsquad.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -37,6 +37,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_USER + "("
                 + KEY_NAME + " varchar(255)," + KEY_PASS + " varchar(255)" + ");";
         db.execSQL(CREATE_CONTACTS_TABLE);
+        addUser(new User("username", "password"));
     }
 
     // Upgrading database version
@@ -66,16 +67,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Get single User login info
     public User getUser(String name) {
+        if (!userRegistered(name)) {
+            return null;
+        }
+
         SQLiteDatabase database = this.getReadableDatabase();
 
         Cursor cursor = database.query(TABLE_USER, new String[] {KEY_NAME,
                 KEY_PASS}, KEY_NAME + "=?",
                 new String[] {String.valueOf(name)}, null, null, null, null);
-        if (cursor != null)
+        if (cursor != null) {
             cursor.moveToFirst();
-
-        User user = new User(cursor.getString(0), cursor.getString(1));
-        return user;
+        }
+        return new User(cursor.getString(0), cursor.getString(1));
     }
 
     //Checks database to see if user is register
@@ -87,7 +91,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //loop through all the rows
         if (cursor.moveToFirst()){
             do {
-                if (cursor.getString(0) == name){
+                if (cursor.getString(0).equals(name)){
                     return true;
                 }
             } while (cursor.moveToNext());
