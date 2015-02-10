@@ -14,6 +14,7 @@ import android.widget.Toast;
 import java.util.HashSet;
 import java.util.Set;
 
+
 public class RegistrationActivity extends ActionBarActivity {
 
     private static final String PREFS_NAME = "LoginInfo";
