@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:text="Go to Registration"
         android:id="@+id/go_to_registration_button"
+        android:onClick="openRegistrationActivity"
         android:layout_below="@+id/go_to_sign_in_button"
         android:layout_centerHorizontal="true" />
 
