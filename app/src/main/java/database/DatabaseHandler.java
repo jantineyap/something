@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by Jantine on 2/10/2015.
+ *
+ * Handles SQLite database built into Android
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -48,7 +50,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Adds new User
-    public void addUser(User user){
+    public void addUser(User user) {
         SQLiteDatabase database = this.getWritableDatabase();
 
         //Creates value and puts name and pass into it
@@ -62,7 +64,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Get single User login info
-    public User getUser(String name){
+    public User getUser(String name) {
         SQLiteDatabase database = this.getReadableDatabase();
 
         Cursor cursor = database.query(TABLE_USER, new String[] {KEY_NAME,
@@ -76,7 +78,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Checks database to see if user is register
-    public boolean userRegistered(String name){
+    public boolean userRegistered(String name) {
         String selectQuery = "SELECT  * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
