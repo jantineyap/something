@@ -21,6 +21,7 @@ public class RegistrationActivity extends ActionBarActivity {
     private static final String PREFS_USERS = "users";
 
     private UserRegistrationTask mAuthTask = null;
+    private DatabaseHandler db;
 
     private EditText mUsernameView;
     private EditText mPasswordView;
@@ -49,6 +50,8 @@ public class RegistrationActivity extends ActionBarActivity {
                 finish();
             }
         });
+
+        db = new DatabaseHandler(getApplicationContext());
     }
 
     public void attemptRegistration() {
@@ -101,7 +104,7 @@ public class RegistrationActivity extends ActionBarActivity {
             mUsernameView.setError(getString(R.string.error_invalid_username));
             focusView = mUsernameView;
             cancel = true;
-        } else if (getSharedPreferences(PREFS_NAME, 0).getStringSet(PREFS_USERS, new HashSet<String>()).contains(username)) {
+        } else if (db.userRegistered(username)) {
             mUsernameView.setError(getString(R.string.error_taken_username));
             focusView = mUsernameView;
             cancel = true;
@@ -152,7 +155,6 @@ public class RegistrationActivity extends ActionBarActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            DatabaseHandler db = new DatabaseHandler(getApplicationContext());
             if (!db.userRegistered(mUsername)) {
                 return db.addUser(user);
             }

@@ -37,7 +37,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_USER + "("
                 + KEY_NAME + " varchar(255)," + KEY_PASS + " varchar(255)" + ");";
         db.execSQL(CREATE_CONTACTS_TABLE);
-        addUser(new User("username", "password"));
+//        addUser(new User("username", "password"));
     }
 
     // Upgrading database version
