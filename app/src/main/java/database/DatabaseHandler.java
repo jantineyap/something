@@ -35,7 +35,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_USER + "("
-                + KEY_NAME + " INTEGER PRIMARY KEY," + KEY_PASS + " TEXT," + ")";
+                + KEY_NAME + " varchar(255)," + KEY_PASS + " varchar(255)" + ");";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
 
@@ -50,7 +50,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Adds new User
-    public void addUser(User user) {
+    public boolean addUser(User user) {
         SQLiteDatabase database = this.getWritableDatabase();
 
         //Creates value and puts name and pass into it
@@ -61,6 +61,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //Insert value into row
         database.insert(TABLE_USER, null, values);
         database.close();
+        return true;
     }
 
     //Get single User login info

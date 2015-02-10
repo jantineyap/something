@@ -30,6 +30,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.DatabaseHandler;
+import database.User;
 
 
 /**
@@ -269,9 +271,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            SharedPreferences loginInfo = getSharedPreferences(PREFS_NAME, 0);
-            String mCorrectPassword = loginInfo.getString(mEmail, null);
-            return mCorrectPassword != null && mPassword.equals(mCorrectPassword); // username exists && password is correct
+            DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+            User user = db.getUser(mEmail);
+            return mPassword != null && mPassword.equals(user.getPass());
         }
 
         @Override
