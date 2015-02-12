@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Jantine on 2/10/2015.
  *
@@ -84,6 +87,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Checks database to see if user is register
     public boolean userRegistered(String name) {
+        //Select query
         String selectQuery = "SELECT  * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -98,4 +102,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return false;
     }
+
+    //Pulls all users from database
+    public List<User> getAllUsers() {
+        List<User> userLists = new ArrayList<User>();
+
+        //Select query
+        String selectQuery = "SELECT  * FROM " + TABLE_USER;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //loops through rows adding user to list
+        if (cursor.moveToFirst()) {
+            do {
+                User user = new User();
+                user.setName(cursor.getString(0));
+                user.setPass(cursor.getString(1));
+                userLists.add(user);
+            } while (cursor.moveToNext());
+        }
+        return userLists;
+    }
+
 }
