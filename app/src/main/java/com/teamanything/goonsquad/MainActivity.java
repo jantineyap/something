@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        //Generate user list in developer console
+        //Generate user list in log
         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
         List<User> userList = db.getAllUsers();
         for (User x : userList) {
