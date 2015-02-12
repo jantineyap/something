@@ -54,6 +54,9 @@ public class RegistrationActivity extends ActionBarActivity {
         db = new DatabaseHandler(getApplicationContext());
     }
 
+    /**
+     * Attempts to register a new user to allow the user to login
+     */
     public void attemptRegistration() {
         if (mAuthTask != null) {
             return;
@@ -122,11 +125,17 @@ public class RegistrationActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Checks to make sure email formatting is correct
+     */
     private boolean isUsernameValid(String username) {
         //TODO: Replace this with your own logic
         return username.length() > 3;
     }
 
+    /**
+     * Checks to make sure password formatting is correct
+     */
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 3;
