@@ -27,14 +27,21 @@ public class RegistrationActivity extends ActionBarActivity {
     private EditText mPasswordView;
     private EditText mPasswordConfirmView;
 
+    /**
+     * Creates the Registration Activity
+     * @param savedInstanceState for created activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //selects XML file for layout of the registration activity screen
         setContentView(R.layout.activity_registration);
+        //setup the login form
         mUsernameView = (EditText) findViewById(R.id.email_form);
         mPasswordView = (EditText) findViewById(R.id.password_form);
         mPasswordConfirmView = (EditText) findViewById(R.id.password_confirm_form);
 
+        //Creates register button
         Button mRegisterButton = (Button) findViewById(R.id.register_button);
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,6 +50,7 @@ public class RegistrationActivity extends ActionBarActivity {
             }
         });
 
+        //Creates cancel button
         Button mCancelButton = (Button) findViewById(R.id.cancel_button);
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +62,10 @@ public class RegistrationActivity extends ActionBarActivity {
         db = DatabaseHandler.getInstance(getApplicationContext());
     }
 
+    /**
+     *  Attempts to register user, checking for valid username
+     *  and password
+     */
     public void attemptRegistration() {
         if (mAuthTask != null) {
             return;
@@ -122,11 +134,19 @@ public class RegistrationActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Checks if username fits the username requirements
+     * @param username input from user
+     */
     private boolean isUsernameValid(String username) {
         //TODO: Replace this with your own logic
         return username.length() > 3;
     }
 
+    /**
+     * Checks if username fits the password requirements
+     * @param password input from user
+     */
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 3;
@@ -152,7 +172,11 @@ public class RegistrationActivity extends ActionBarActivity {
             user = new User(username, password);
         }
 
-        @Override
+        /**
+         * Adds user to database
+         * @return true if user successfully added,
+         * false otherwise
+         */
         protected Boolean doInBackground(Void... params) {
 
             if (!db.userRegistered(mUsername)) {
@@ -161,7 +185,10 @@ public class RegistrationActivity extends ActionBarActivity {
             return false;
         }
 
-        @Override
+        /**
+         * Attempts to register user
+         * @param success to determine whether to call startActivity
+         */
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
 
@@ -172,7 +199,9 @@ public class RegistrationActivity extends ActionBarActivity {
             }
         }
 
-        @Override
+        /**
+         * Clears mAuthTask
+         */
         protected void onCancelled() {
             mAuthTask = null;
         }
