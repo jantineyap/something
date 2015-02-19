@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
 
+    private static DatabaseHandler sInstance;
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
@@ -25,12 +26,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // User table name
     private static final String TABLE_USER = "User";
+    private static final String TABLE_FRIEND = "FriendsC";
 
     // User Table Columns names
     private static final String KEY_NAME = "name";
     private static final String KEY_PASS = "pass";
+    private static final String KEY_USER = "user";
+    private static final String KEY_FRIEND = "friends";
 
-    public DatabaseHandler(Context context) {
+    public static DatabaseHandler getInstance(Context context) {
+        if (sInstance == null) {
+            sInstance = new DatabaseHandler(context);
+        }
+        return sInstance;
+    }
+
+    private DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -39,8 +50,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_USER + "("
                 + KEY_NAME + " varchar(255)," + KEY_PASS + " varchar(255)" + ");";
+        String CREATE_FRIENDS_TABLE = "CREATE TABLE " + TABLE_FRIEND + "("
+                + KEY_FRIEND + " varchar(255)," + ");";
         db.execSQL(CREATE_CONTACTS_TABLE);
-//        addUser(new User("username", "password"));
     }
 
     // Upgrading database version
@@ -48,7 +60,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
-
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIEND);
         // Create tables again
         onCreate(db);
     }
@@ -88,7 +100,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Checks database to see if user is register
     public boolean userRegistered(String name) {
         //Select query
-        String selectQuery = "SELECT  * FROM " + TABLE_USER;
+        String selectQuery = "SELECT " + KEY_NAME + " FROM " + TABLE_USER;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -122,6 +134,43 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return userLists;
+    }
+
+    public boolean addConnection(String user, String name){
+        if (userRegistered(name)) {
+            SQLiteDatabase database = this.getWritableDatabase();
+
+            //Creates value and puts user and friend into it
+            ContentValues values = new ContentValues();
+            values.put(KEY_USER, user);
+            values.put(KEY_FRIEND, name);
+
+            //Insert value into row
+            database.insert(TABLE_FRIEND, null, values);
+            database.close();
+            return true;
+        }
+        return false;
+
+    }
+
+    public List<String> getFriends(String user){
+        List<String> friends = new ArrayList<String>();
+
+        //Select query
+        String selectQuery = "SELECT  * FROM " + TABLE_FRIEND;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //loops through rows adding friends to list
+        if (cursor.moveToFirst()) {
+            do {
+                if (user.equals(cursor.getString(0))){
+                    friends.add(cursor.getString(1));
+                }
+            } while (cursor.moveToNext());
+        }
+        return friends;
     }
 
 }
