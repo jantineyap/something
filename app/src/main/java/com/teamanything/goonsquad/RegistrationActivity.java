@@ -51,7 +51,7 @@ public class RegistrationActivity extends ActionBarActivity {
             }
         });
 
-        db = new DatabaseHandler(getApplicationContext());
+        db = DatabaseHandler.getInstance(getApplicationContext());
     }
 
     public void attemptRegistration() {
