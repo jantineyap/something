@@ -19,8 +19,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import database.DatabaseHandler;
-import database.User;
+import com.teamanything.goonsquad.database.DatabaseHandler;
+import com.teamanything.goonsquad.database.User;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener {

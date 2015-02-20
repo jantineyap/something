@@ -15,7 +15,7 @@ import com.teamanything.goonsquad.R;
 
 import java.util.List;
 
-import database.DatabaseHandler;
+import com.teamanything.goonsquad.database.DatabaseHandler;
 
 /**
  * A simple {@link Fragment} subclass.

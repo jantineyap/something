@@ -1,7 +1,6 @@
 package com.teamanything.goonsquad;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,11 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import database.DatabaseHandler;
-import database.User;
+import com.teamanything.goonsquad.database.DatabaseHandler;
+import com.teamanything.goonsquad.database.User;
 
 
 public class RegistrationActivity extends ActionBarActivity {

@@ -8,7 +8,6 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -30,8 +29,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import database.DatabaseHandler;
-import database.User;
+import com.teamanything.goonsquad.database.DatabaseHandler;
+import com.teamanything.goonsquad.database.User;
 
 
 /**
