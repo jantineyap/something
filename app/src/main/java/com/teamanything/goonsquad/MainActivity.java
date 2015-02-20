@@ -52,7 +52,7 @@ public class MainActivity extends ActionBarActivity
         DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
         List<User> userList = db.getAllUsers();
         for (User x : userList) {
-            Log.i("List users", x.getName());
+            Log.i("List users", x.getEmail());
         }
     }
 
