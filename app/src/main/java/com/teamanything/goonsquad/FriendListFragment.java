@@ -77,7 +77,7 @@ public class FriendListFragment extends ListFragment {
 
         db = DatabaseHandler.getInstance(getActivity());
 
-        User temp = new User("temp", "temp");
+        User temp = new User("temp", "temp", "temp");
         db.addUser(temp);
         db.addConnection(CUR_USER, "temp");
         List<String> names = db.getFriends(CUR_USER);
