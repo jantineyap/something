@@ -38,7 +38,7 @@ import com.teamanything.goonsquad.database.User;
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
-    private static final String PREFS_NAME = "LoginInfo";
+    public static String CurUser;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -270,7 +270,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+            DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
             User user = db.getUser(mEmail);
             if (user == null) {
                 return false;
@@ -284,6 +284,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
 
             if (success) {
+                CurUser = mEmail;
                 startActivity(new Intent(LoginActivity.this.getBaseContext(), MainActivity.class));
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
