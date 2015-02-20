@@ -1,10 +1,11 @@
 package com.teamanything.goonsquad;
 
 import android.app.Activity;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.ListFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -16,13 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.List;
+
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.User;
 
-import java.util.List;
-
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -33,6 +34,8 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    private String curUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +50,14 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            curUser = extras.getString("curUser");
+        }
 
-        //Generate user list in developer console
+        //Generate user list in console
         DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+
         List<User> userList = db.getAllUsers();
         for (User x : userList) {
             Log.i("List users", x.getEmail());
@@ -59,10 +67,31 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        PlaceholderFragment mFragment = PlaceholderFragment.newInstance(position + 1);
-        fragmentManager.beginTransaction().replace(R.id.container, mFragment).commit();
+        ListFragment mFragment = new ListFragment();
+        switch (position + 1) {
+            case 1:
+                mFragment = new FriendListFragment().newInstance(position + 1, curUser);
+                break;
+            case 2:
+                mFragment = new FriendListFragment().newInstance(position + 1, curUser);
+                break;
+            case 3:
+                mFragment = new FriendListFragment().newInstance(position + 1, curUser);
+                break;
+            default:
+                break;
+        }
+
+        if (mFragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container, mFragment).commit();
+            // update selected item and title, then close the drawer
+        } else {
+            // error in creating fragment
+            Log.e("MainActivity", "Error in creating fragment");
+        }
     }
+
 
     public void onSectionAttached(int number) {
         switch (number) {
@@ -123,6 +152,11 @@ public class MainActivity extends ActionBarActivity
     private void logout() {
         //TODO implement logout
         finish();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
     /**

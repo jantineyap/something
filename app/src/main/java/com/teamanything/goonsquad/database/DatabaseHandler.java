@@ -30,6 +30,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // User Table Columns emails
     private static final String KEY_EMAIL = "email";
+    private static final String KEY_NAME = "username";
     private static final String KEY_PASS = "pass";
     private static final String KEY_USER = "user";
     private static final String KEY_FRIEND = "friends";
@@ -49,10 +50,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_USER + "("
-                + KEY_EMAIL + " varchar(255)," + KEY_PASS + " varchar(255)" + ");";
+                + KEY_EMAIL + " varchar(255),"
+                + KEY_NAME + " varchar(255),"
+                + KEY_PASS + " varchar(255)" + ");";
         String CREATE_FRIENDS_TABLE = "CREATE TABLE " + TABLE_FRIEND + "("
-                + KEY_FRIEND + " varchar(255)," + ");";
+                + KEY_USER + " varchar(255),"
+                + KEY_FRIEND + " varchar(255)" + ");";
         db.execSQL(CREATE_CONTACTS_TABLE);
+        db.execSQL(CREATE_FRIENDS_TABLE);
     }
 
     // Upgrading database version
@@ -72,6 +77,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //Creates value and puts email and pass into it
         ContentValues values = new ContentValues();
         values.put(KEY_EMAIL, user.getEmail());
+        values.put(KEY_NAME, user.getName());
         values.put(KEY_PASS, user.getPass());
 
         //Insert value into row
@@ -88,13 +94,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase database = this.getReadableDatabase();
 
-        Cursor cursor = database.query(TABLE_USER, new String[] {KEY_EMAIL,
-                KEY_PASS}, KEY_EMAIL + "=?",
+        Cursor cursor = database.query(TABLE_USER, new String[] {KEY_EMAIL, KEY_NAME,
+                        KEY_PASS}, KEY_EMAIL + "=?",
                 new String[] {String.valueOf(email)}, null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
         }
-        return new User(cursor.getString(0), cursor.getString(1));
+        return new User(cursor.getString(0), cursor.getString(1), cursor.getString(2));
     }
 
     //Checks database to see if user is register
@@ -135,7 +141,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return userLists;
     }
-
+    /**
+     * getFriends method that takes a user String and returns a friendslist
+     *
+     * @param  user, the user to add the friendslist of
+     * @param  email, the email to add the friendslist of
+     * @return boolean to see if it worked
+     */
     public boolean addConnection(String user, String email){
         if (userRegistered(email)) {
             SQLiteDatabase database = this.getWritableDatabase();
@@ -154,6 +166,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * getFriends method that takes a user String and returns a friendslist
+     *
+     * @param user, the user to find the friendslist of
+     * @return A list of friend connection.
+     */
     public List<String> getFriends(String user){
         List<String> friends = new ArrayList<String>();
 

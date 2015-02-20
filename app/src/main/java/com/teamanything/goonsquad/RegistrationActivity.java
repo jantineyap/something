@@ -10,20 +10,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.HashSet;
-
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.User;
 
+
 public class RegistrationActivity extends ActionBarActivity {
 
-    private static final String PREFS_NAME = "LoginInfo";
-    private static final String PREFS_USERS = "users";
+    private static String CUR_USER;
 
     private UserRegistrationTask mAuthTask = null;
     private DatabaseHandler db;
 
     private EditText mEmailView;
+    private EditText mNameView;
     private EditText mPasswordView;
     private EditText mPasswordConfirmView;
 
@@ -32,6 +31,7 @@ public class RegistrationActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         mEmailView = (EditText) findViewById(R.id.email_form);
+        mNameView = (EditText) findViewById(R.id.name_form);
         mPasswordView = (EditText) findViewById(R.id.password_form);
         mPasswordConfirmView = (EditText) findViewById(R.id.password_confirm_form);
 
@@ -61,17 +61,25 @@ public class RegistrationActivity extends ActionBarActivity {
 
         // Reset errors.
         mEmailView.setError(null);
+        mNameView.setError(null);
         mPasswordView.setError(null);
         mPasswordConfirmView.setError(null);
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
+        String name = mNameView.getText().toString();
         String password = mPasswordView.getText().toString();
         String passwordConfirm = mPasswordConfirmView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
+        //checks for name input
+        if (TextUtils.isEmpty(name)) {
+            mNameView.setError(getString(R.string.error_field_required));
+            focusView = mNameView;
+            cancel = true;
+        }
 
         // Check for a valid password.
         if (TextUtils.isEmpty(password)) {
@@ -105,7 +113,7 @@ public class RegistrationActivity extends ActionBarActivity {
             focusView = mEmailView;
             cancel = true;
         } else if (db.userRegistered(email)) {
-            mEmailView.setError(getString(R.string.error_taken_username));
+            mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
         }
@@ -117,7 +125,7 @@ public class RegistrationActivity extends ActionBarActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            mAuthTask = new UserRegistrationTask(email, password);
+            mAuthTask = new UserRegistrationTask(email, name, password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -144,17 +152,18 @@ public class RegistrationActivity extends ActionBarActivity {
 
         private final String mEmail;
         private final String mPassword;
+        private final String mName;
         private User user;
 
-        UserRegistrationTask(String email, String password) {
+        UserRegistrationTask(String email, String name, String password) {
             mEmail = email;
             mPassword = password;
-            user = new User(email, password);
+            mName = name;
+            user = new User(mEmail, mName, mPassword);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-
             if (!db.userRegistered(mEmail)) {
                 return db.addUser(user);
             }
@@ -166,6 +175,7 @@ public class RegistrationActivity extends ActionBarActivity {
             mAuthTask = null;
 
             if (success) {
+                CUR_USER = mEmail;
                 startActivity(new Intent(RegistrationActivity.this.getBaseContext(), MainActivity.class));
             } else {
                 createToast("Registration failed");
