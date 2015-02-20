@@ -1,12 +1,15 @@
 package com.teamanything.goonsquad;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.ListFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -45,10 +48,31 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        PlaceholderFragment mFragment = PlaceholderFragment.newInstance(position + 1);
-        fragmentManager.beginTransaction().replace(R.id.container, mFragment).commit();
+        ListFragment mFragment = new ListFragment();
+        switch (position + 1) {
+            case 1:
+                mFragment = new FriendListFragment().newInstance(position + 1);
+                break;
+            case 2:
+                mFragment = new FriendListFragment().newInstance(position + 1);
+                break;
+            case 3:
+                mFragment = new FriendListFragment().newInstance(position + 1);
+                break;
+            default:
+                break;
+        }
+
+        if (mFragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container, mFragment).commit();
+            // update selected item and title, then close the drawer
+        } else {
+            // error in creating fragment
+            Log.e("MainActivity", "Error in creating fragment");
+        }
     }
+
 
     public void onSectionAttached(int number) {
         switch (number) {
@@ -109,6 +133,11 @@ public class MainActivity extends ActionBarActivity
     private void logout() {
         //TODO implement logout
         finish();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
     /**
