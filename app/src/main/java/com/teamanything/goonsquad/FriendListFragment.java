@@ -13,6 +13,10 @@ import android.widget.ListView;
 
 import com.teamanything.goonsquad.R;
 
+import java.util.List;
+
+import database.DatabaseHandler;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -60,8 +64,10 @@ public class FriendListFragment extends ListFragment {
             sectionNum = getArguments().getString(ARG_SECTION_NUMBER);
         }
 
-        String[] names = new String[] { "Sarthak", "Adam", "Jantine",
-                "David", "Carroll" };
+        DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+        List<String> names = db.getFriends(CUR_USER);
+
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, names);
         setListAdapter(adapter);

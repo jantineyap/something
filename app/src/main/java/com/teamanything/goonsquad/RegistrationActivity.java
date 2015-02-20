@@ -14,13 +14,16 @@ import android.widget.Toast;
 import java.util.HashSet;
 import java.util.Set;
 
+import database.DatabaseHandler;
+import database.User;
+
 
 public class RegistrationActivity extends ActionBarActivity {
 
-    private static final String PREFS_NAME = "LoginInfo";
-    private static final String PREFS_USERS = "users";
+    private static String CUR_USER;
 
     private UserRegistrationTask mAuthTask = null;
+    private DatabaseHandler db;
 
     private EditText mUsernameView;
     private EditText mPasswordView;
@@ -49,6 +52,8 @@ public class RegistrationActivity extends ActionBarActivity {
                 finish();
             }
         });
+
+        db = DatabaseHandler.getInstance(getApplicationContext());
     }
 
     public void attemptRegistration() {
@@ -101,7 +106,7 @@ public class RegistrationActivity extends ActionBarActivity {
             mUsernameView.setError(getString(R.string.error_invalid_username));
             focusView = mUsernameView;
             cancel = true;
-        } else if (getSharedPreferences(PREFS_NAME, 0).getStringSet(PREFS_USERS, new HashSet<String>()).contains(username)) {
+        } else if (db.userRegistered(username)) {
             mUsernameView.setError(getString(R.string.error_taken_username));
             focusView = mUsernameView;
             cancel = true;
@@ -141,22 +146,18 @@ public class RegistrationActivity extends ActionBarActivity {
 
         private final String mUsername;
         private final String mPassword;
+        private User user;
 
         UserRegistrationTask(String username, String password) {
             mUsername = username;
             mPassword = password;
+            user = new User(mUsername, mPassword);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            SharedPreferences loginInfo = getSharedPreferences(PREFS_NAME, 0);
-            SharedPreferences.Editor editor = loginInfo.edit();
-            Set<String> users = loginInfo.getStringSet(PREFS_USERS, new HashSet<String>());
-            if (!users.contains(mUsername)) {
-                editor.putString(mUsername, mPassword);
-                users.add(mUsername);
-                editor.putStringSet(PREFS_USERS, users);
-                return editor.commit();
+            if (!db.userRegistered(mUsername)) {
+                return db.addUser(user);
             }
             return false;
         }
@@ -166,6 +167,7 @@ public class RegistrationActivity extends ActionBarActivity {
             mAuthTask = null;
 
             if (success) {
+                CUR_USER = mUsername;
                 startActivity(new Intent(RegistrationActivity.this.getBaseContext(), MainActivity.class));
             } else {
                 createToast("Registration failed");

@@ -30,6 +30,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.DatabaseHandler;
+import database.User;
 
 
 /**
@@ -37,7 +39,7 @@ import java.util.List;
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
-    private static final String PREFS_NAME = "LoginInfo";
+    private static String CUR_USER;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -269,9 +271,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            SharedPreferences loginInfo = getSharedPreferences(PREFS_NAME, 0);
-            String mCorrectPassword = loginInfo.getString(mEmail, null);
-            return mCorrectPassword != null && mPassword.equals(mCorrectPassword); // username exists && password is correct
+            DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+            User user = db.getUser(mEmail);
+            if (user == null) {
+                return false;
+            }
+            return mPassword != null && mPassword.equals(user.getPass());
         }
 
         @Override
@@ -280,6 +285,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
 
             if (success) {
+                CUR_USER = mEmail;
                 startActivity(new Intent(LoginActivity.this.getBaseContext(), MainActivity.class));
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

@@ -17,6 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.List;
+
+import database.DatabaseHandler;
+import database.User;
+
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener {
 
@@ -43,6 +48,13 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        //Generate user list in console
+        DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+        List<User> userList = db.getAllUsers();
+        for (User x : userList) {
+            Log.i("List users", x.getEmail());
+        }
     }
 
     @Override
