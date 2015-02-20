@@ -2,29 +2,29 @@ package com.teamanything.goonsquad.database;
 
 /**
  * Created by Jantine on 2/10/2015.
- * User class for storing user name and pass
+ * User class for storing user email and pass
  * with getter and setter methods
  */
 public class User {
 
-    private String name;
+    private String email;
     private String pass;
 
     public User(){
 
     }
 
-    public User(String name, String pass){
-        this.name = name;
+    public User(String email, String pass){
+        this.email = email;
         this.pass = pass;
     }
 
-    public String getName(){
-        return this.name;
+    public String getEmail(){
+        return this.email;
     }
 
-    public void setName(String name){
-        this.name = name;
+    public void setEmail(String email){
+        this.email = email;
     }
 
     public String getPass(){

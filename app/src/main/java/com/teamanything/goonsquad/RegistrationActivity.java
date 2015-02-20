@@ -23,7 +23,7 @@ public class RegistrationActivity extends ActionBarActivity {
     private UserRegistrationTask mAuthTask = null;
     private DatabaseHandler db;
 
-    private EditText mUsernameView;
+    private EditText mEmailView;
     private EditText mPasswordView;
     private EditText mPasswordConfirmView;
 
@@ -31,7 +31,7 @@ public class RegistrationActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        mUsernameView = (EditText) findViewById(R.id.email_form);
+        mEmailView = (EditText) findViewById(R.id.email_form);
         mPasswordView = (EditText) findViewById(R.id.password_form);
         mPasswordConfirmView = (EditText) findViewById(R.id.password_confirm_form);
 
@@ -60,12 +60,12 @@ public class RegistrationActivity extends ActionBarActivity {
         }
 
         // Reset errors.
-        mUsernameView.setError(null);
+        mEmailView.setError(null);
         mPasswordView.setError(null);
         mPasswordConfirmView.setError(null);
 
         // Store values at the time of the login attempt.
-        String username = mUsernameView.getText().toString();
+        String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
         String passwordConfirm = mPasswordConfirmView.getText().toString();
 
@@ -95,18 +95,18 @@ public class RegistrationActivity extends ActionBarActivity {
             cancel = true;
         }
 
-        // Check for a valid username.
-        if (TextUtils.isEmpty(username)) {
-            mUsernameView.setError(getString(R.string.error_field_required));
-            focusView = mUsernameView;
+        // Check for a valid email.
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
             cancel = true;
-        } else if (!isUsernameValid(username)) {
-            mUsernameView.setError(getString(R.string.error_invalid_username));
-            focusView = mUsernameView;
+        } else if (!isEmailValid(email)) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
             cancel = true;
-        } else if (db.userRegistered(username)) {
-            mUsernameView.setError(getString(R.string.error_taken_username));
-            focusView = mUsernameView;
+        } else if (db.userRegistered(email)) {
+            mEmailView.setError(getString(R.string.error_taken_username));
+            focusView = mEmailView;
             cancel = true;
         }
 
@@ -117,14 +117,14 @@ public class RegistrationActivity extends ActionBarActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            mAuthTask = new UserRegistrationTask(username, password);
+            mAuthTask = new UserRegistrationTask(email, password);
             mAuthTask.execute((Void) null);
         }
     }
 
-    private boolean isUsernameValid(String username) {
+    private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return username.length() > 3;
+        return email.length() > 3;
     }
 
     private boolean isPasswordValid(String password) {
@@ -142,20 +142,20 @@ public class RegistrationActivity extends ActionBarActivity {
      */
     public class UserRegistrationTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mUsername;
+        private final String mEmail;
         private final String mPassword;
         private User user;
 
-        UserRegistrationTask(String username, String password) {
-            mUsername = username;
+        UserRegistrationTask(String email, String password) {
+            mEmail = email;
             mPassword = password;
-            user = new User(username, password);
+            user = new User(email, password);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            if (!db.userRegistered(mUsername)) {
+            if (!db.userRegistered(mEmail)) {
                 return db.addUser(user);
             }
             return false;
