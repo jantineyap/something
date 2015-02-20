@@ -51,8 +51,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_USER + "("
                 + KEY_EMAIL + " varchar(255)," + KEY_PASS + " varchar(255)" + ");";
         String CREATE_FRIENDS_TABLE = "CREATE TABLE " + TABLE_FRIEND + "("
-                + KEY_FRIEND + " varchar(255)," + ");";
+                + KEY_USER + " varchar(255)," + KEY_FRIEND + " varchar(255)" + ");";
         db.execSQL(CREATE_CONTACTS_TABLE);
+        db.execSQL(CREATE_FRIENDS_TABLE);
     }
 
     // Upgrading database version
@@ -135,7 +136,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return userLists;
     }
-
+    /**
+     * getFriends method that takes a user String and returns a friendslist
+     *
+     * @param  user, the user to add the friendslist of
+     * @param  email, the email to add the friendslist of
+     * @return boolean to see if it worked
+     */
     public boolean addConnection(String user, String email){
         if (userRegistered(email)) {
             SQLiteDatabase database = this.getWritableDatabase();
@@ -154,6 +161,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * getFriends method that takes a user String and returns a friendslist
+     *
+     * @param String user, the user to find the friendslist of
+     * @return A list of friend connection.
+     */
     public List<String> getFriends(String user){
         List<String> friends = new ArrayList<String>();
 

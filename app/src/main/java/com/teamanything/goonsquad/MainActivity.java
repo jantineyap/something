@@ -35,6 +35,8 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
+    private String curUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +50,14 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            curUser = extras.getString("curUser");
+        }
 
         //Generate user list in console
         DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+
         List<User> userList = db.getAllUsers();
         for (User x : userList) {
             Log.i("List users", x.getEmail());
@@ -63,13 +70,13 @@ public class MainActivity extends ActionBarActivity
         ListFragment mFragment = new ListFragment();
         switch (position + 1) {
             case 1:
-                mFragment = new FriendListFragment().newInstance(position + 1);
+                mFragment = new FriendListFragment().newInstance(position + 1, curUser);
                 break;
             case 2:
-                mFragment = new FriendListFragment().newInstance(position + 1);
+                mFragment = new FriendListFragment().newInstance(position + 1, curUser);
                 break;
             case 3:
-                mFragment = new FriendListFragment().newInstance(position + 1);
+                mFragment = new FriendListFragment().newInstance(position + 1, curUser);
                 break;
             default:
                 break;

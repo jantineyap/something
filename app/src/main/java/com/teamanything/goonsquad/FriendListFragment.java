@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.teamanything.goonsquad.R;
@@ -16,6 +17,7 @@ import com.teamanything.goonsquad.R;
 import java.util.List;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
+import com.teamanything.goonsquad.database.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,25 +32,27 @@ public class FriendListFragment extends ListFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
-
+    private static final String CUR_USER = "current_user";
     // TODO: Rename and change types of parameters
     private String sectionNum;
-
+    private String curUser;
+    private DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param sectionNumber
+     * @param curUser
      * @return A new instance of fragment FriendListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FriendListFragment newInstance(int sectionNumber) {
+    public static FriendListFragment newInstance(int sectionNumber, String curUser) {
         FriendListFragment fragment = new FriendListFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);;
+        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        args.putString(CUR_USER, curUser);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,15 +60,26 @@ public class FriendListFragment extends ListFragment {
     public FriendListFragment() {
         // Required empty public constructor
     }
-
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param savedInstanceState for the oncreate
+     * @return A new instance of fragment FriendListFragment.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             sectionNum = getArguments().getString(ARG_SECTION_NUMBER);
+            curUser = getArguments().getString(CUR_USER);
         }
 
-        DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+        db = DatabaseHandler.getInstance(getActivity());
+
+        User temp = new User("temp", "temp");
+        db.addUser(temp);
+        db.addConnection(CUR_USER, "temp");
         List<String> names = db.getFriends(CUR_USER);
 
 
@@ -72,9 +87,24 @@ public class FriendListFragment extends ListFragment {
                 android.R.layout.simple_list_item_1, names);
         setListAdapter(adapter);
     }
+
     public void onListItemClick(ListView l, View v, int position, long id) {
         // do something with the data
     }
+    /*
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.button) {
+            EditText et = (EditText) v.findViewById(R.id.editText);
+            String addConnection =  et.getText().toString();
+
+            db = DatabaseHandler.getInstance(getActivity());
+            User newUser = new User("temp", "temp");
+            db.addUser(newUser);
+            db.addConnection(curUser, "temp");
+        }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,5 +152,8 @@ public class FriendListFragment extends ListFragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+
+
+
 
 }
