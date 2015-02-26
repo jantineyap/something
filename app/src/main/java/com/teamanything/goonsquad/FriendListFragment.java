@@ -32,9 +32,9 @@ public class FriendListFragment extends ListFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private static final String CUR_USER = "current_user";
+    private static final String CUR_USER = "CUR_USER";
     // TODO: Rename and change types of parameters
-    private String sectionNum;
+    private int sectionNum;
     private String curUser;
     private DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
@@ -71,40 +71,26 @@ public class FriendListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            sectionNum = getArguments().getString(ARG_SECTION_NUMBER);
+            sectionNum = getArguments().getInt(ARG_SECTION_NUMBER);
             curUser = getArguments().getString(CUR_USER);
         }
 
         db = DatabaseHandler.getInstance(getActivity());
 
-        User temp = new User("temp", "temp", "temp");
-        db.addUser(temp);
-        db.addConnection(CUR_USER, "temp");
-        List<String> names = db.getFriends(CUR_USER);
+        User tempUser = new User("temp@temp.com", "temp", "temp");
+        db.addUser(tempUser);
+        db.addConnection(curUser, "temp@temp.com");
 
+        List<String> friends = db.getFriends(curUser);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, names);
+                android.R.layout.simple_list_item_1, friends);
         setListAdapter(adapter);
     }
 
     public void onListItemClick(ListView l, View v, int position, long id) {
         // do something with the data
     }
-    /*
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.button) {
-            EditText et = (EditText) v.findViewById(R.id.editText);
-            String addConnection =  et.getText().toString();
-
-            db = DatabaseHandler.getInstance(getActivity());
-            User newUser = new User("temp", "temp");
-            db.addUser(newUser);
-            db.addConnection(curUser, "temp");
-        }
-    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
