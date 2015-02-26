@@ -28,6 +28,7 @@
             android:hint="Friend's email"
             android:ems="10"
             android:id="@+id/editText"
+            android:paddingRight="4dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/button"/>
