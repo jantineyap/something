@@ -165,7 +165,9 @@ public class RegistrationActivity extends ActionBarActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             if (!db.userRegistered(mEmail)) {
-                return db.addUser(user);
+                boolean val = db.addUser(user);
+                db.addConnection(mEmail, "temp@temp.com");
+                return val;
             }
             return false;
         }
