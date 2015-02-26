@@ -29,11 +29,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_FRIEND = "FriendsC";
 
     // User Table Columns emails
-    private static final String KEY_EMAIL = "email";
-    private static final String KEY_NAME = "username";
-    private static final String KEY_PASS = "pass";
-    private static final String KEY_USER = "user";
-    private static final String KEY_FRIEND = "friends";
+    private static final String KEY_EMAIL = "email"; // unique key email
+    private static final String KEY_NAME = "username"; // John Doe
+    private static final String KEY_PASS = "pass"; // pass
+    private static final String KEY_USER = "user"; // user email friendsTable
+    private static final String KEY_FRIEND = "friends"; // user friendsEmail friendsTable
 
     public static DatabaseHandler getInstance(Context context) {
         if (sInstance == null) {

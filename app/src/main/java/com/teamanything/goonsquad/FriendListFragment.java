@@ -91,20 +91,6 @@ public class FriendListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         // do something with the data
     }
-    /*
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.button) {
-            EditText et = (EditText) v.findViewById(R.id.editText);
-            String addConnection =  et.getText().toString();
-
-            db = DatabaseHandler.getInstance(getActivity());
-            User newUser = new User("temp", "temp");
-            db.addUser(newUser);
-            db.addConnection(curUser, "temp");
-        }
-    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
