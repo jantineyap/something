@@ -67,13 +67,13 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        ListFragment mFragment = new ListFragment();
+        Fragment mFragment = new ListFragment();
         switch (position + 1) {
             case 1:
-                mFragment = new FriendListFragment().newInstance(position + 1, curUser);
+                mFragment = new PlaceholderFragment().newInstance(position + 1);
                 break;
             case 2:
-                mFragment = new FriendListFragment().newInstance(position + 1, curUser);
+                mFragment = new PlaceholderFragment().newInstance(position + 1);
                 break;
             case 3:
                 mFragment = new FriendListFragment().newInstance(position + 1, curUser);
