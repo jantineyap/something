@@ -149,7 +149,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return boolean to see if it worked
      */
     public boolean addConnection(String user, String email){
-        if (userRegistered(email)) {
+        if (userRegistered(email) && !isFriends(user, email)) {
             SQLiteDatabase database = this.getWritableDatabase();
 
             //Creates value and puts user and friend into it
@@ -189,6 +189,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return friends;
+    }
+
+    public boolean isFriends(String user, String email) {
+        String selectQuery = "SELECT  * FROM " + TABLE_FRIEND;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //loops through rows checking friends
+        if (cursor.moveToFirst()) {
+            do {
+                if (user.equals(cursor.getString(0))
+                        && email.equals(cursor.getString(1))){
+                    return true;
+                }
+            } while (cursor.moveToNext());
+        }
+        return false;
     }
 
 }
