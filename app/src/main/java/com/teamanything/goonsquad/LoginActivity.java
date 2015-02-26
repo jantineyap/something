@@ -38,11 +38,12 @@ import com.teamanything.goonsquad.database.User;
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
-    private static String CUR_USER;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+
+    private static final String CUR_USER = "CUR_USER";
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -274,7 +275,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             User user = db.getUser(mEmail);
             if (user == null) {
                 return false;
-            }
+            };
             return mPassword != null && mPassword.equals(user.getPass());
         }
 
@@ -285,7 +286,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
             if (success) {
                 Intent i = new Intent(LoginActivity.this.getBaseContext(), MainActivity.class);
-                i.putExtra("curUser",CUR_USER);
+                i.putExtra(CUR_USER, mEmail);
                 startActivity(i);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

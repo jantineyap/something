@@ -16,10 +16,10 @@ import com.teamanything.goonsquad.database.User;
 
 public class RegistrationActivity extends ActionBarActivity {
 
-    private static String CUR_USER;
-
     private UserRegistrationTask mAuthTask = null;
     private DatabaseHandler db;
+
+    private static final String CUR_USER = "CUR_USER";
 
     private EditText mEmailView;
     private EditText mNameView;
@@ -175,8 +175,9 @@ public class RegistrationActivity extends ActionBarActivity {
             mAuthTask = null;
 
             if (success) {
-                CUR_USER = mEmail;
-                startActivity(new Intent(RegistrationActivity.this.getBaseContext(), MainActivity.class));
+                Intent i = new Intent(RegistrationActivity.this.getBaseContext(), MainActivity.class);
+                i.putExtra(CUR_USER, mEmail);
+                startActivity(i);
             } else {
                 createToast("Registration failed");
             }
