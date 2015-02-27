@@ -31,6 +31,9 @@ public class MainActivity extends ActionBarActivity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
+    private Fragment mFragment;
+    private FriendListFragment friendFragment;
+
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
@@ -72,7 +75,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        Fragment mFragment = new ListFragment();
+        mFragment = new ListFragment();
         switch (position + 1) {
             case 1:
                 mFragment = new PlaceholderFragment().newInstance(position + 1);
@@ -82,6 +85,7 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 3:
                 mFragment = new FriendListFragment().newInstance(position + 1, curUser);
+                friendFragment = (FriendListFragment) mFragment;
                 break;
             default:
                 break;
@@ -157,6 +161,10 @@ public class MainActivity extends ActionBarActivity
     private void logout() {
         //TODO implement logout
         finish();
+    }
+
+    public void addFriend(View view) {
+        friendFragment.addFriend(view);
     }
 
     @Override

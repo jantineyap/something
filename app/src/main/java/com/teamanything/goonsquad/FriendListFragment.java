@@ -27,7 +27,7 @@ import com.teamanything.goonsquad.database.User;
  * Use the {@link FriendListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FriendListFragment extends ListFragment implements View.OnClickListener {
+public class FriendListFragment extends ListFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +36,8 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
     // TODO: Rename and change types of parameters
     private int sectionNum;
     private String curUser;
+    private List<String> friends;
+    private ArrayAdapter<String> adapter;
     private DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
 
@@ -77,9 +79,9 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
 
         db = DatabaseHandler.getInstance(getActivity());
 
-        List<String> friends = db.getFriends(curUser);
+        friends = db.getFriends(curUser);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+        adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_list_item_1, friends);
         setListAdapter(adapter);
     }
@@ -135,13 +137,13 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
         public void onFragmentInteraction(Uri uri);
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.button) {
-            View et = getView().findViewById(R.id.editText);
-            String email = ((EditText) et).getText().toString();
-            db.addConnection(curUser, email);
+    public void addFriend(View view) {
+        View et = getView().findViewById(R.id.editText);
+        String email = ((EditText) et).getText().toString();
+        if (db.addConnection(curUser, email)) {
+            friends.add(email);
+            adapter.notifyDataSetChanged();
         }
     }
+
 }

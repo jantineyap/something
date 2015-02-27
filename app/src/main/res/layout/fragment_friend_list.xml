@@ -19,7 +19,7 @@
             android:id="@+id/button"
             android:layout_alignBaseline="@+id/editText"
             android:layout_alignParentRight="true"
-            android:onClick="addFriend"/>
+            android:onClick="addFriend" />
 
 
         <EditText
