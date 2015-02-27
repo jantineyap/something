@@ -173,7 +173,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return boolean to see if it worked
      */
     public boolean addConnection(String user, String email){
-        if (userRegistered(email) && !isFriends(user, email)) {
+        if (userRegistered(email) && !isFriends(user, email) && !email.equals(user)) {
             SQLiteDatabase database = this.getWritableDatabase();
 
             //Creates value and puts user and friend into it
@@ -252,6 +252,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return false;
+    }
+
+    public boolean deleteFriend(String user, String email) {
+        if (!isFriends(user, email)) {
+            return false;
+        }
+        String query = "DELETE FROM " + TABLE_FRIEND + " WHERE "
+                + KEY_USER + " = '" + user + "' AND " + KEY_FRIEND + " = '" + email + "';";
+        String query2 = "DELETE FROM " + TABLE_FRIEND + " WHERE "
+                + KEY_USER + " = '" + email + "' AND " + KEY_FRIEND + " = '" + user + "';";
+        SQLiteDatabase database = this.getWritableDatabase();
+        database.execSQL(query);
+        database.execSQL(query2);
+        database.close();
+        return true;
     }
 
 }

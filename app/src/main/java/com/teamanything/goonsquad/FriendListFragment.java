@@ -160,6 +160,7 @@ public class FriendListFragment extends ListFragment {
         String email = ((EditText) et).getText().toString();
         if (db.deleteConnection(curUser, email)) {
             friends.remove(email);
+            db.deleteFriend(curUser, email);
             adapter.notifyDataSetChanged();
         } else {
             Toast.makeText(getActivity(), "Friend Not Found", Toast.LENGTH_SHORT).show();
