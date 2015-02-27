@@ -19,7 +19,7 @@ public class WelcomeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        DatabaseHandler db = DatabaseHandler.getInstance(this);
+        DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
         db.addUser(new User("temp@temp.com", "temp", "temp"));
     }
 

@@ -135,7 +135,9 @@ public class FriendListFragment extends ListFragment {
         public void onFragmentInteraction(Uri uri);
     }
 
-
-
-
+    private void addFriend() {
+        View et = getView().findViewById(R.id.editText);
+        String email = ((EditText) et).getText().toString();
+        db.addConnection(curUser, email);
+    }
 }
