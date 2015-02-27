@@ -193,6 +193,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return false;
 
     }
+    /**
+     * deleteFriend method that takes a user String and email to delete
+     *
+     * @param  user, the user to remove from the friendslist
+     * @param  email, the friend to remove the friendslist of
+     * @return boolean to see if it worked
+     */
+    public boolean deleteConnection(String user, String email){
+        if (userRegistered(email) && isFriends(user, email)) {
+            SQLiteDatabase database = this.getWritableDatabase();
+            database.delete(TABLE_FRIEND, "ROWID = (SELECT Max(ROWID) FROM "
+                    + TABLE_FRIEND + " WHERE " + "user=? AND friends=?)", new String[] { user, email });
+            database.close();
+            return true;
+        }
+        return false;
+
+    }
 
     /**
      * getFriends method that takes a user String and returns a friendslist
@@ -234,6 +252,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return false;
+    }
+
+    public boolean deleteFriend(String user, String email) {
+        if (!isFriends(user, email)) {
+            return false;
+        }
+        String query = "DELETE FROM " + TABLE_FRIEND + " WHERE "
+                + KEY_USER + " = '" + user + "' AND " + KEY_FRIEND + " = '" + email + "';";
+        String query2 = "DELETE FROM " + TABLE_FRIEND + " WHERE "
+                + KEY_USER + " = '" + email + "' AND " + KEY_FRIEND + " = '" + user + "';";
+        SQLiteDatabase database = this.getWritableDatabase();
+        database.execSQL(query);
+        database.execSQL(query2);
+        database.close();
+        return true;
     }
 
 }
