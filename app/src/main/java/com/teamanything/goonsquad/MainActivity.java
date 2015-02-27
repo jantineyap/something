@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -30,11 +31,15 @@ public class MainActivity extends ActionBarActivity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
+    private Fragment mFragment;
+    private FriendListFragment friendFragment;
+
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
 
+    private static final String CUR_USER = "CUR_USER";
     private String curUser;
 
     @Override
@@ -52,7 +57,10 @@ public class MainActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            curUser = extras.getString("curUser");
+            curUser = extras.getString(CUR_USER);
+        }
+        if (curUser == null) {
+            Log.e("MainActivity", "curUser is null");
         }
 
         //Generate user list in console
@@ -67,7 +75,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        Fragment mFragment = new ListFragment();
+        mFragment = new ListFragment();
         switch (position + 1) {
             case 1:
                 mFragment = new PlaceholderFragment().newInstance(position + 1);
@@ -77,6 +85,7 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 3:
                 mFragment = new FriendListFragment().newInstance(position + 1, curUser);
+                friendFragment = (FriendListFragment) mFragment;
                 break;
             default:
                 break;
@@ -154,6 +163,10 @@ public class MainActivity extends ActionBarActivity
         finish();
     }
 
+    public void addFriend(View view) {
+        friendFragment.addFriend(view);
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
 
@@ -188,6 +201,9 @@ public class MainActivity extends ActionBarActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main_activity, container, false);
+            View tv = rootView.findViewById(R.id.section_label);
+            int section = getArguments().getInt(ARG_SECTION_NUMBER);
+            ((TextView) tv).setText(Integer.toString(section));
             return rootView;
         }
 

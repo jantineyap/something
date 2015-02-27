@@ -7,6 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.teamanything.goonsquad.database.DatabaseHandler;
+import com.teamanything.goonsquad.database.User;
+
 
 public class WelcomeActivity extends ActionBarActivity {
 
@@ -16,6 +19,8 @@ public class WelcomeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+        db.addUser(new User("temp@temp.com", "temp", "temp"));
     }
 
     public void openLoginActivity(View view) {
