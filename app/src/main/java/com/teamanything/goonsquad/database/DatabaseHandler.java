@@ -254,19 +254,4 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean deleteFriend(String user, String email) {
-        if (!isFriends(user, email)) {
-            return false;
-        }
-        String query = "DELETE FROM " + TABLE_FRIEND + " WHERE "
-                + KEY_USER + " = '" + user + "' AND " + KEY_FRIEND + " = '" + email + "';";
-        String query2 = "DELETE FROM " + TABLE_FRIEND + " WHERE "
-                + KEY_USER + " = '" + email + "' AND " + KEY_FRIEND + " = '" + user + "';";
-        SQLiteDatabase database = this.getWritableDatabase();
-        database.execSQL(query);
-        database.execSQL(query2);
-        database.close();
-        return true;
-    }
-
 }
