@@ -27,7 +27,7 @@ import com.teamanything.goonsquad.database.User;
  * Use the {@link FriendListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FriendListFragment extends ListFragment {
+public class FriendListFragment extends ListFragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -135,9 +135,13 @@ public class FriendListFragment extends ListFragment {
         public void onFragmentInteraction(Uri uri);
     }
 
-    private void addFriend() {
-        View et = getView().findViewById(R.id.editText);
-        String email = ((EditText) et).getText().toString();
-        db.addConnection(curUser, email);
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.button) {
+            View et = getView().findViewById(R.id.editText);
+            String email = ((EditText) et).getText().toString();
+            db.addConnection(curUser, email);
+        }
     }
 }
