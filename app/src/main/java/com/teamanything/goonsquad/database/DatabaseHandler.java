@@ -156,9 +156,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(KEY_USER, user);
             values.put(KEY_FRIEND, email);
+            ContentValues values2 = new ContentValues();
+            values2.put(KEY_USER, email);
+            values2.put(KEY_FRIEND, user);
 
             //Insert value into row
             database.insert(TABLE_FRIEND, null, values);
+            database.insert(TABLE_FRIEND, null, values2);
             database.close();
             return true;
         }
