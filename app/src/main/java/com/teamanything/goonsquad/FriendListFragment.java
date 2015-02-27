@@ -158,7 +158,7 @@ public class FriendListFragment extends ListFragment {
     public void deleteFriend(View view) {
         View et = getView().findViewById(R.id.editText);
         String email = ((EditText) et).getText().toString();
-        if (!db.addConnection(curUser, email)) {
+        if (db.deleteConnection(curUser, email)) {
             friends.remove(email);
             adapter.notifyDataSetChanged();
         } else {

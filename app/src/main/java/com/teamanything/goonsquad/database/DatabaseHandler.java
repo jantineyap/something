@@ -193,6 +193,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return false;
 
     }
+    /**
+     * deleteFriend method that takes a user String and email to delete
+     *
+     * @param  user, the user to add the friendslist of
+     * @param  email, the email to add the friendslist of
+     * @return boolean to see if it worked
+     */
+    public boolean deleteConnection(String user, String email){
+        if (userRegistered(email) && isFriends(user, email)) {
+            SQLiteDatabase database = this.getWritableDatabase();
+            database.delete(TABLE_FRIEND, "ROWID = (SELECT Max(ROWID) FROM "
+                    + TABLE_FRIEND + " WHERE " + "user=? AND friends=?)", new String[] { user, email });
+            database.close();
+            return true;
+        }
+        return false;
+
+    }
 
     /**
      * getFriends method that takes a user String and returns a friendslist
