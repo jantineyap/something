@@ -92,7 +92,8 @@ public class FriendListFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
         // Get the item that was clicked
         Object o = this.getListAdapter().getItem(position);
-        String toast = o.toString();
+        User u = db.getUser(o.toString());
+        String toast = u.getName() + " " + u.getEmail() + " ..... 0";
         Toast.makeText(getActivity(), toast, Toast.LENGTH_LONG).show();
     }
 
@@ -149,6 +150,19 @@ public class FriendListFragment extends ListFragment {
         if (db.addConnection(curUser, email)) {
             friends.add(email);
             adapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(getActivity(), "User Not Found", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void deleteFriend(View view) {
+        View et = getView().findViewById(R.id.editText);
+        String email = ((EditText) et).getText().toString();
+        if (!db.addConnection(curUser, email)) {
+            friends.remove(email);
+            adapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(getActivity(), "Friend Not Found", Toast.LENGTH_SHORT).show();
         }
     }
 

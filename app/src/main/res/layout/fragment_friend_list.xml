@@ -17,9 +17,10 @@
             android:layout_height="wrap_content"
             android:text="Add"
             android:id="@+id/button"
-            android:layout_alignBaseline="@+id/editText"
+            android:onClick="addFriend"
+            android:layout_alignBottom="@+id/editText"
             android:layout_alignParentRight="true"
-            android:onClick="addFriend" />
+            android:layout_alignParentEnd="true" />
 
 
         <EditText
@@ -34,6 +35,16 @@
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/button"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:id="@+id/button1"
+            android:onClick="deleteFriend"
+            android:layout_alignBottom="@+id/editText"
+            android:layout_alignRight="@+id/editText"
+            android:layout_alignEnd="@+id/editText" />
+
     </RelativeLayout>
 
     <ListView
@@ -42,7 +53,6 @@
         android:id="@android:id/list"
         android:layout_below="@+id/addLayout"
         android:layout_alignParentLeft="true" />
-
 
 
 </RelativeLayout>

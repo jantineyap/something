@@ -167,6 +167,10 @@ public class MainActivity extends ActionBarActivity
         friendFragment.addFriend(view);
     }
 
+    public void deleteFriend(View view) {
+        friendFragment.deleteFriend(view);
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
 
