@@ -34,19 +34,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_PASS = "pass";
     private static final String KEY_USER = "user"; // user email  in friendsTable
     private static final String KEY_FRIEND = "friends"; // user friendsEmail  in friendsTable
-
+    /**
+     * Handler getInstance to work with the database
+     *
+     * @param context the context to pass into the handler
+     */
     public static DatabaseHandler getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new DatabaseHandler(context);
         }
         return sInstance;
     }
-
+    /**
+     * Handler takes a context to work with the database
+     *
+     * @param context the context to pass into the handler
+     */
     private DatabaseHandler(Context context) {
         super(context, DATABASE_EMAIL, null, DATABASE_VERSION);
     }
 
-    // Creating Tables
+    /**
+     * Creates tables
+     *
+     * @param db the SQLiteDatabase to pass in
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_USER + "("
@@ -60,7 +72,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_FRIENDS_TABLE);
     }
 
-    // Upgrading database version
+    /**
+     * used to update tables with upgrade without
+     * having to reinstall the entire app
+     *
+     * @param db the SQLiteDatabase to pass in
+     * @param oldVersion the old version of the DB (int)
+     * @param newVersion the old version of the DB (int)
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
@@ -70,7 +89,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    //Adds new User
+    /**
+     * adds a new user to the database
+     *
+     * @param user the user to add to the database
+     * @return boolean to check if the method executed properly
+     */
     public boolean addUser(User user) {
         SQLiteDatabase database = this.getWritableDatabase();
 

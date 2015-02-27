@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.teamanything.goonsquad.R;
 
@@ -90,6 +91,11 @@ public class FriendListFragment extends ListFragment {
 
     public void onListItemClick(ListView l, View v, int position, long id) {
         // do something with the data
+        super.onListItemClick(l, v, position, id);
+        // Get the item that was clicked
+        Object o = this.getListAdapter().getItem(position);
+        String toast = o.toString();
+        Toast.makeText(getActivity(), toast, Toast.LENGTH_LONG).show();
     }
 
     @Override
