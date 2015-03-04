@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -28,7 +29,7 @@ import com.teamanything.goonsquad.database.User;
  * Use the {@link FriendListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FriendListFragment extends ListFragment {
+public class FriendListFragment extends ListFragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,6 +42,8 @@ public class FriendListFragment extends ListFragment {
     private ArrayAdapter<String> adapter;
     private DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
+
+    private EditText etEmail;
 
     /**
      * Use this factory method to create a new instance of
@@ -95,20 +98,21 @@ public class FriendListFragment extends ListFragment {
         User u = db.getUser(o.toString());
         String toast = u.getName() + " " + u.getEmail() + " ..... 0";
         Toast.makeText(getActivity(), toast, Toast.LENGTH_LONG).show();
+        etEmail.setText(l.getItemAtPosition(position).toString());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friend_list, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        view.findViewById(R.id.button_add).setOnClickListener(this);
+        view.findViewById(R.id.button_remove).setOnClickListener(this);
+
+        etEmail = (EditText) view.findViewById(R.id.editText_email);
+
+        return view;
     }
 
     @Override
@@ -129,6 +133,34 @@ public class FriendListFragment extends ListFragment {
         mListener = null;
     }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.button_add) {
+            // add
+            String email = etEmail.getText().toString();
+            if (mListener.onAddFriendClick(email)) {
+                addToList(email);
+            }
+        } else if (id == R.id.button_remove) {
+            // remove
+            String email = etEmail.getText().toString();
+            if (mListener.onRemoveFriendClick(email)) {
+                removeFromList(email);
+            }
+        }
+    }
+
+    public void addToList(String email) {
+        friends.add(email);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void removeFromList(String email) {
+        friends.remove(email);
+        adapter.notifyDataSetChanged();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -140,30 +172,7 @@ public class FriendListFragment extends ListFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public boolean onAddFriendClick(String email);
+        public boolean onRemoveFriendClick(String email);
     }
-
-    public void addFriend(View view) {
-        View et = getView().findViewById(R.id.editText);
-        String email = ((EditText) et).getText().toString();
-        if (db.addConnection(curUser, email)) {
-            friends.add(email);
-            adapter.notifyDataSetChanged();
-        } else {
-            Toast.makeText(getActivity(), "User Not Found", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void deleteFriend(View view) {
-        View et = getView().findViewById(R.id.editText);
-        String email = ((EditText) et).getText().toString();
-        if (db.deleteConnection(curUser, email)) {
-            friends.remove(email);
-            adapter.notifyDataSetChanged();
-        } else {
-            Toast.makeText(getActivity(), "Friend Not Found", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 }

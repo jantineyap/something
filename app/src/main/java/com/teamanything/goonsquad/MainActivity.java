@@ -32,7 +32,6 @@ public class MainActivity extends ActionBarActivity
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     private Fragment mFragment;
-    private FriendListFragment friendFragment;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -41,6 +40,8 @@ public class MainActivity extends ActionBarActivity
 
     private static final String CUR_USER = "CUR_USER";
     private String curUser;
+
+    private DatabaseHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,9 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        mFragment = new PlaceholderFragment().newInstance(0);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             curUser = extras.getString(CUR_USER);
@@ -64,7 +68,7 @@ public class MainActivity extends ActionBarActivity
         }
 
         //Generate user list in console
-        DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+        db = DatabaseHandler.getInstance(getApplicationContext());
 
         List<User> userList = db.getAllUsers();
         for (User x : userList) {
@@ -78,14 +82,13 @@ public class MainActivity extends ActionBarActivity
         mFragment = new ListFragment();
         switch (position + 1) {
             case 1:
-                mFragment = new PlaceholderFragment().newInstance(position + 1);
+                mFragment = PlaceholderFragment.newInstance(position + 1);
                 break;
             case 2:
-                mFragment = new PlaceholderFragment().newInstance(position + 1);
+                mFragment = PlaceholderFragment.newInstance(position + 1);
                 break;
             case 3:
-                mFragment = new FriendListFragment().newInstance(position + 1, curUser);
-                friendFragment = (FriendListFragment) mFragment;
+                mFragment = FriendListFragment.newInstance(position + 1, curUser);
                 break;
             default:
                 break;
@@ -93,7 +96,11 @@ public class MainActivity extends ActionBarActivity
 
         if (mFragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, mFragment).commit();
+            if (mFragment instanceof FriendListFragment) {
+                fragmentManager.beginTransaction().replace(R.id.container, mFragment, "friend").commit();
+            } else {
+                fragmentManager.beginTransaction().replace(R.id.container, mFragment).commit();
+            }
             // update selected item and title, then close the drawer
         } else {
             // error in creating fragment
@@ -163,17 +170,24 @@ public class MainActivity extends ActionBarActivity
         finish();
     }
 
-    public void addFriend(View view) {
-        friendFragment.addFriend(view);
-    }
-
-    public void deleteFriend(View view) {
-        friendFragment.deleteFriend(view);
+    @Override
+    public boolean onAddFriendClick(String email) {
+        if (db.addConnection(curUser, email)) {
+            return true;
+        } else {
+            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public boolean onRemoveFriendClick(String email) {
+        if (db.deleteConnection(curUser, email)) {
+            return true;
+        } else {
+            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
     /**

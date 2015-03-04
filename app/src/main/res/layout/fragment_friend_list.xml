@@ -10,40 +10,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:id="@+id/addLayout" >
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add"
-            android:id="@+id/button"
-            android:onClick="addFriend"
-            android:layout_alignBottom="@+id/editText"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
+        android:id="@+id/addRemoveLayout" >
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:hint="Friend's email"
             android:ems="10"
-            android:id="@+id/editText"
-            android:paddingRight="4dp"
+            android:id="@+id/editText_email"
+            android:padding="4dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/button"/>
+            android:layout_alignParentLeft="true"/>
 
-        <Button
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Delete"
-            android:id="@+id/button1"
-            android:onClick="deleteFriend"
-            android:layout_alignBottom="@+id/editText"
-            android:layout_alignRight="@+id/editText"
-            android:layout_alignEnd="@+id/editText" />
+            android:layout_below="@+id/editText_email"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Add"
+                android:layout_weight="50"
+                android:id="@+id/button_add"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Remove"
+                android:layout_weight="50"
+                android:id="@+id/button_remove"/>
+
+            </LinearLayout>
 
     </RelativeLayout>
 
@@ -51,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@android:id/list"
-        android:layout_below="@+id/addLayout"
+        android:layout_below="@+id/addRemoveLayout"
         android:layout_alignParentLeft="true" />
 
 
