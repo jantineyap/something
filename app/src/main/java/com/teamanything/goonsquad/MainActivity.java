@@ -84,7 +84,7 @@ public class MainActivity extends ActionBarActivity
                 mFragment = PlaceholderFragment.newInstance(position + 1);
                 break;
             case 2:
-                mFragment = PlaceholderFragment.newInstance(position + 1);
+                mFragment = WishListFragment.newInstance(position + 1, curUser);
                 break;
             case 3:
                 mFragment = FriendListFragment.newInstance(position + 1, curUser);
