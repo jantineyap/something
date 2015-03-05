@@ -43,7 +43,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      */
     private UserLoginTask mAuthTask = null;
 
-    private static final String CUR_USER = "CUR_USER";
+    private static final String ARG_CUR_USER = "CUR_USER";
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -286,7 +286,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
             if (success) {
                 Intent i = new Intent(LoginActivity.this.getBaseContext(), MainActivity.class);
-                i.putExtra(CUR_USER, mEmail);
+                i.putExtra(ARG_CUR_USER, mEmail);
                 startActivity(i);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

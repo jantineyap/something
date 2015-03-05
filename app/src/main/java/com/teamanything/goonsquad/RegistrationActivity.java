@@ -19,7 +19,7 @@ public class RegistrationActivity extends ActionBarActivity {
     private UserRegistrationTask mAuthTask = null;
     private DatabaseHandler db;
 
-    private static final String CUR_USER = "CUR_USER";
+    private static final String ARG_CUR_USER = "CUR_USER";
 
     private EditText mEmailView;
     private EditText mNameView;
@@ -178,7 +178,7 @@ public class RegistrationActivity extends ActionBarActivity {
 
             if (success) {
                 Intent i = new Intent(RegistrationActivity.this.getBaseContext(), MainActivity.class);
-                i.putExtra(CUR_USER, mEmail);
+                i.putExtra(ARG_CUR_USER, mEmail);
                 startActivity(i);
             } else {
                 createToast("Registration failed");

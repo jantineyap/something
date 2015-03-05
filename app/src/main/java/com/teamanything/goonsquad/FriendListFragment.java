@@ -34,7 +34,7 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private static final String CUR_USER = "CUR_USER";
+    private static final String ARG_CUR_USER = "CUR_USER";
     // TODO: Rename and change types of parameters
     private int sectionNum;
     private String curUser;
@@ -58,7 +58,7 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
         FriendListFragment fragment = new FriendListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        args.putString(CUR_USER, curUser);
+        args.putString(ARG_CUR_USER, curUser);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,7 +78,7 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             sectionNum = getArguments().getInt(ARG_SECTION_NUMBER);
-            curUser = getArguments().getString(CUR_USER);
+            curUser = getArguments().getString(ARG_CUR_USER);
         }
 
         db = DatabaseHandler.getInstance(getActivity());
@@ -94,10 +94,9 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
         // do something with the data
         super.onListItemClick(l, v, position, id);
         // Get the item that was clicked
-        Object o = this.getListAdapter().getItem(position);
-        User u = db.getUser(o.toString());
-        String toast = u.getName() + " " + u.getEmail() + " ..... 0";
-        Toast.makeText(getActivity(), toast, Toast.LENGTH_LONG).show();
+
+        mListener.showUserDialog(db.getUser(l.getItemAtPosition(position).toString()));
+
         etEmail.setText(l.getItemAtPosition(position).toString());
     }
 
@@ -174,5 +173,6 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
     public interface OnFragmentInteractionListener {
         public boolean onAddFriendClick(String email);
         public boolean onRemoveFriendClick(String email);
+        public void showUserDialog(User user);
     }
 }

@@ -13,8 +13,7 @@
         android:id="@+id/addRemoveLayout" >
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:hint="Friend's email"
             android:ems="10"

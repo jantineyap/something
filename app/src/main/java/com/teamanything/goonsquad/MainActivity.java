@@ -1,7 +1,6 @@
 package com.teamanything.goonsquad;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,7 +37,7 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
-    private static final String CUR_USER = "CUR_USER";
+    private static final String ARG_CUR_USER = "CUR_USER";
     private String curUser;
 
     private DatabaseHandler db;
@@ -61,7 +60,7 @@ public class MainActivity extends ActionBarActivity
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            curUser = extras.getString(CUR_USER);
+            curUser = extras.getString(ARG_CUR_USER);
         }
         if (curUser == null) {
             Log.e("MainActivity", "curUser is null");
@@ -118,7 +117,7 @@ public class MainActivity extends ActionBarActivity
                 mTitle = getString(R.string.title_section2);
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
+                mTitle = getString(R.string.title_friends);
                 break;
         }
     }
@@ -156,7 +155,7 @@ public class MainActivity extends ActionBarActivity
                 logout();
                 return true;
             case R.id.action_settings:
-                Toast.makeText(this, "Settings not implemented", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Settings not implemented", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_about:
                 Toast.makeText(this, "GOONSQUAD!", Toast.LENGTH_SHORT).show();
@@ -171,13 +170,19 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+    public void showUserDialog(User user) {
+        UserDialog userDialog = UserDialog.newInstance(user);
+        userDialog.show(getSupportFragmentManager(), "fragment_user_dialog");
+    }
+
+    @Override
     public boolean onAddFriendClick(String email) {
         if (db.addConnection(curUser, email)) {
             return true;
         } else {
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -186,8 +191,8 @@ public class MainActivity extends ActionBarActivity
             return true;
         } else {
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            return false;
         }
-        return false;
     }
 
     /**
