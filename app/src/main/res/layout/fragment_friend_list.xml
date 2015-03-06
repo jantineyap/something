@@ -44,7 +44,7 @@
                 android:layout_weight="50"
                 android:id="@+id/button_remove"/>
 
-            </LinearLayout>
+        </LinearLayout>
 
     </RelativeLayout>
 

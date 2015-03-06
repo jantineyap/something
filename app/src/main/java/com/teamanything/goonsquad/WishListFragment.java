@@ -16,9 +16,11 @@ import android.widget.Toast;
 
 import com.teamanything.goonsquad.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
+import com.teamanything.goonsquad.database.Item;
 import com.teamanything.goonsquad.database.User;
 
 /**
@@ -44,6 +46,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
     private OnFragmentInteractionListener mListener;
 
     private EditText etItem;
+    private EditText etPrice;
 
     /**
      * Use this factory method to create a new instance of
@@ -83,7 +86,12 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
 
         db = DatabaseHandler.getInstance(getActivity());
 
-        items = db.getWishList(curUser);
+        List<Item> holder = db.getWishlist(curUser);
+        List<String> temp = new ArrayList<>();
+        for (Item i : holder) {
+            temp.add(i.getItem() + "     " + i.getPrice());
+        }
+        items = temp;
 
         adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_list_item_1, items);
@@ -94,7 +102,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
         // do something with the data
         super.onListItemClick(l, v, position, id);
         // Get the item that was clicked
-        etItem.setText(l.getItemAtPosition(position).toString());
+        String set = l.getItemAtPosition(position).toString();
     }
 
     @Override
@@ -107,7 +115,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
         view.findViewById(R.id.button_remove).setOnClickListener(this);
 
         etItem = (EditText) view.findViewById(R.id.editText_Item);
-
+        etPrice = (EditText) view.findViewById(R.id.editText_Price);
         return view;
     }
 
@@ -135,8 +143,15 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
         if (id == R.id.button_add) {
             // add
             String item = etItem.getText().toString();
-            if (mListener.onAddItemClick(item)) {
-                addToList(item);
+            Double price;
+            if (etPrice.getText().toString() != "") {
+                price = Double.parseDouble(etPrice.getText().toString());
+            } else {
+                price = 0.0;
+            }
+
+            if (mListener.onAddItemClick(item, price)) {
+                addToList(item, price);
             }
         } else if (id == R.id.button_remove) {
             // remove
@@ -147,13 +162,13 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
         }
     }
 
-    public void addToList(String item) {
-        items.add(item);
+    public void addToList(String item, Double price) {
+        items.add(item + "     " + price);
         adapter.notifyDataSetChanged();
     }
 
     public void removeFromList(String item) {
-        items.remove(item);
+        items.remove(item + "     " + db.getPrice(curUser, item));
         adapter.notifyDataSetChanged();
     }
 
@@ -168,7 +183,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public boolean onAddItemClick(String email);
-        public boolean onRemoveItemClick(String email);
+        public boolean onAddItemClick(String item, Double price);
+        public boolean onRemoveItemClick(String item);
     }
 }

@@ -23,7 +23,7 @@ import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.User;
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener, WishListFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -191,6 +191,26 @@ public class MainActivity extends ActionBarActivity
             return true;
         } else {
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onAddItemClick(String item, Double price) {
+        if (db.addWish(curUser, item, price)) {
+            return true;
+        } else {
+            Toast.makeText(this, "Could Not Add Item", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onRemoveItemClick(String item) {
+        if (db.deleteWish(curUser, item)) {
+            return true;
+        } else {
+            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
