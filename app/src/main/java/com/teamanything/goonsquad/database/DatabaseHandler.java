@@ -27,13 +27,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // User table email
     private static final String TABLE_USER = "User";
     private static final String TABLE_FRIEND = "FriendsC";
+    private static final String TABLE_ITEMS = "Items";
+    private static final String TABLE_WISHLIST = "Wishlist";
+
 
     // User Table Columns emails
     private static final String KEY_EMAIL = "email"; // unique key email in usertable
     private static final String KEY_NAME = "username"; // John Doe, not checked for duplicates
     private static final String KEY_PASS = "pass";
+
     private static final String KEY_USER = "user"; // user email  in friendsTable
     private static final String KEY_FRIEND = "friends"; // user friendsEmail  in friendsTable
+
+    private static final String KEY_ITEM = "item"; // item in itemsTable
+    private static final String KEY_PRICE = "price"; // price in itemsTable
+
+
     /**
      * Handler getInstance to work with the database
      *
@@ -68,8 +77,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_FRIENDS_TABLE = "CREATE TABLE " + TABLE_FRIEND + "("
                 + KEY_USER + " varchar(255),"
                 + KEY_FRIEND + " varchar(255)" + ");";
+        String CREATE_ITEMS_TABLE = "CREATE TABLE " + TABLE_ITEMS + "("
+                +KEY_ITEM + " varchar(255),"
+                +KEY_PRICE + " DOUBLE" + ");";
+        String CREATE_WISHLIST_TABLE = "CREATE TABLE " + TABLE_WISHLIST + "("
+                +KEY_USER + " varchar(255),"
+                +KEY_ITEM + " varchar(255),"
+                +KEY_PRICE+ " DOUBLE" + ");";
         db.execSQL(CREATE_CONTACTS_TABLE);
         db.execSQL(CREATE_FRIENDS_TABLE);
+        db.execSQL(CREATE_ITEMS_TABLE);
+        db.execSQL(CREATE_WISHLIST_TABLE);
     }
 
     /**
@@ -85,6 +103,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIEND);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ITEMS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_WISHLIST);
         // Create tables again
         onCreate(db);
     }
@@ -96,6 +116,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return boolean to check if the method executed properly
      */
     public boolean addUser(User user) {
+        if (userRegistered(user.getEmail())) {
+            return false;
+        }
         SQLiteDatabase database = this.getWritableDatabase();
 
         //Creates value and puts email and pass into it
@@ -145,9 +168,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return false;
     }
 
-    //Pulls all users from database
+    /**Pulls all users from database
+     *
+     *@return list of all users
+     */
     public List<User> getAllUsers() {
-        List<User> userLists = new ArrayList<User>();
+        List<User> userLists = new ArrayList<>();
 
         //Select query
         String selectQuery = "SELECT  * FROM " + TABLE_USER;
@@ -204,7 +230,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (userRegistered(email) && isFriends(user, email)) {
             SQLiteDatabase database = this.getWritableDatabase();
             database.delete(TABLE_FRIEND, "ROWID = (SELECT Max(ROWID) FROM "
-                    + TABLE_FRIEND + " WHERE " + "user=? AND friends=?)", new String[] { user, email });
+                    + TABLE_FRIEND + " WHERE " + "user=? AND friends=?)",
+                    new String[] { user, email });
+            database.delete(TABLE_FRIEND, "ROWID = (SELECT Max(ROWID) FROM "
+                    + TABLE_FRIEND + " WHERE " + "user=? AND friends=?)",
+                    new String[] { email, user });
             database.close();
             return true;
         }
@@ -219,7 +249,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return A list of friend connection.
      */
     public List<String> getFriends(String user){
-        List<String> friends = new ArrayList<String>();
+        List<String> friends = new ArrayList<>();
 
         //Select query
         String selectQuery = "SELECT  * FROM " + TABLE_FRIEND;
@@ -237,6 +267,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return friends;
     }
 
+    /**
+     * getFriends method that takes a user String and returns a friendslist
+     *
+     * @param user, the user to find the friendslist of
+     * @param email, email of friend
+     * @return boolean whether success
+     */
     public boolean isFriends(String user, String email) {
         String selectQuery = "SELECT  * FROM " + TABLE_FRIEND;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -254,4 +291,98 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return false;
     }
 
+    /**
+     * add a wish to Wishlist
+     *
+     * @param user, the user
+     * @param item, the wanted item
+     * @param price, the desired price
+     * @return boolean of success or not
+     */
+    public boolean addWish(String user, String item, double price) {
+        if (isWish(user, item)) {
+            deleteWish(user, item);
+        }
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        //Creates value and puts email and pass into it
+        ContentValues values = new ContentValues();
+        values.put(KEY_USER, user);
+        values.put(KEY_ITEM, item);
+        values.put(KEY_PRICE, price);
+
+        //Insert value into row
+        database.insert(TABLE_WISHLIST, null, values);
+        database.close();
+        return true;
+    }
+
+    /**
+     * checks to see if already wish
+     *
+     * @param user, the user
+     * @param item, the wanted item
+     * @return boolean of item or not
+     */
+    public boolean isWish(String user, String item) {
+        //Select query
+        String selectQuery = "SELECT  * FROM " + TABLE_WISHLIST;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //loop through all the rows
+        if (cursor.moveToFirst()){
+            do {
+                if (cursor.getString(0).equals(user) && cursor.getString(1).equals(item)){
+                    return true;
+                }
+            } while (cursor.moveToNext());
+        }
+        return false;
+    }
+
+    /**
+     * delete the wish
+     *
+     * @param user, the user
+     * @param item, the wanted item
+     * @return boolean of success or not
+     */
+    public boolean deleteWish(String user, String item) {
+        if (isWish(user, item)) {
+            SQLiteDatabase database = this.getWritableDatabase();
+            database.delete(TABLE_WISHLIST, "ROWID = (SELECT Max(ROWID) FROM "
+                    + TABLE_WISHLIST + " WHERE " + KEY_USER + "=? AND " + KEY_ITEM + "=?)",
+                    new String[] { user, item });
+            database.close();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * return list of users wishlist
+     *
+     * @param user, the user
+     * @return list of items that is user's wishlist
+     */
+    public List<Item> getWishlist(String user) {
+        List<Item> items = new ArrayList<>();
+
+        //Select query
+        String selectQuery = "SELECT  * FROM " + TABLE_WISHLIST;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //loops through rows adding friends to list
+        if (cursor.moveToFirst()) {
+            do {
+                if (user.equals(cursor.getString(0))){
+                    Item item = new Item(cursor.getString(1), cursor.getDouble(2));
+                    items.add(item);
+                }
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
 }
