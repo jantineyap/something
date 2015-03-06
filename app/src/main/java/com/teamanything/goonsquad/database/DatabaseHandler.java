@@ -386,4 +386,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
+    public double getPrice(String user, String item) {
+
+        String selectQuery = "SELECT  * FROM " + TABLE_WISHLIST;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //loop through all the rows
+        if (cursor.moveToFirst()){
+            do {
+                if (cursor.getString(0).equals(user) && cursor.getString(1).equals(item)){
+                    return cursor.getDouble(2);
+                }
+            } while (cursor.moveToNext());
+        }
+        return -1;
+    }
 }
