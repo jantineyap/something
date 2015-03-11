@@ -40,5 +40,4 @@ public class SaleItem implements Item {
     public String getLocation() {
         return location;
     }
-
 }

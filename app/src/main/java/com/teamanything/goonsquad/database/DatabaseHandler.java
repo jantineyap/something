@@ -378,7 +378,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 if (user.equals(cursor.getString(0))){
-                    Item item = new Item(cursor.getString(1), cursor.getDouble(2));
+                    Item item = new WishListItem(cursor.getString(1), cursor.getDouble(2));
                     items.add(item);
                 }
             } while (cursor.moveToNext());
