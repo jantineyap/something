@@ -532,7 +532,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + TABLE_WISHLIST + " WHERE " + KEY_USER + "= " + user;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        
+
         if (cursor.moveToFirst()) {
             do {
                 SaleItem hasSale = saleCheck(cursor.getString(0), cursor.getDouble(1));
