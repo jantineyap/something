@@ -24,6 +24,7 @@ public class WishListItem {
     public String getItem() {
         return item;
     }
+
     public double getPrice() {
         return price;
     }

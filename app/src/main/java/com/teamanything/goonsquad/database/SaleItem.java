@@ -16,7 +16,7 @@ public class SaleItem {
         price = 0.0;
     }
 
-    public SaleItem(String item, String location, double price) {
+    public SaleItem(String item, double price, String location) {
         this.item = item;
         this.location = location;
         this.price = price;
