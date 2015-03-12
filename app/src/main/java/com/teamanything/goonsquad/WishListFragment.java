@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
-import com.teamanything.goonsquad.database.Item;
 import com.teamanything.goonsquad.database.User;
+import com.teamanything.goonsquad.database.WishListItem;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,9 +86,9 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
 
         db = DatabaseHandler.getInstance(getActivity());
 
-        List<Item> holder = db.getWishlist(curUser);
+        List<WishListItem> holder = db.getWishlist(curUser);
         List<String> temp = new ArrayList<>();
-        for (Item i : holder) {
+        for (WishListItem i : holder) {
             temp.add(i.getItem() + "     " + i.getPrice());
         }
         items = temp;
