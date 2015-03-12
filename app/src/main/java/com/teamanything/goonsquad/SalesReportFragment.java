@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.User;
-import com.teamanything.goonsquad.database.WishListItem;
+import com.teamanything.goonsquad.database.SaleItem;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +31,7 @@ import com.teamanything.goonsquad.database.WishListItem;
  * Use the {@link FriendListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WishListFragment extends ListFragment implements View.OnClickListener {
+public class SalesReportFragment extends ListFragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,13 +40,14 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
     // TODO: Rename and change types of parameters
     private int sectionNum;
     private String curUser;
-    private List<String> items;
+    private List<String> salesItems;
     private ArrayAdapter<String> adapter;
     private DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
 
-    private EditText etItem;
+    private EditText etSalesItem;
     private EditText etPrice;
+    private EditText etLocation;
 
     /**
      * Use this factory method to create a new instance of
@@ -57,8 +58,8 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
      * @return A new instance of fragment WishListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static WishListFragment newInstance(int sectionNumber, String curUser) {
-        WishListFragment fragment = new WishListFragment();
+    public static SalesReportFragment newInstance(int sectionNumber, String curUser) {
+        SalesReportFragment fragment = new SalesReportFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         args.putString(CUR_USER, curUser);
@@ -66,7 +67,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
         return fragment;
     }
 
-    public WishListFragment() {
+    public SalesReportFragment() {
         // Required empty public constructor
     }
     /**
@@ -86,15 +87,15 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
 
         db = DatabaseHandler.getInstance(getActivity());
 
-        List<WishListItem> holder = db.getWishlist(curUser);
+        List<SaleItem> holder = db.getSaleList();
         List<String> temp = new ArrayList<>();
-        for (WishListItem i : holder) {
-            temp.add(i.getItem() + "     " + i.getPrice());
+        for (SaleItem i : holder) {
+            temp.add(i.getItem() + " " + i.getPrice() + " " + i.getLocation());
         }
-        items = temp;
+        salesItems = temp;
 
         adapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_list_item_1, items);
+                android.R.layout.simple_list_item_1, salesItems);
         setListAdapter(adapter);
     }
 
@@ -114,8 +115,9 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
         view.findViewById(R.id.button_add).setOnClickListener(this);
         view.findViewById(R.id.button_remove).setOnClickListener(this);
 
-        etItem = (EditText) view.findViewById(R.id.editText_Item);
+        etSalesItem = (EditText) view.findViewById(R.id.editText_Item);
         etPrice = (EditText) view.findViewById(R.id.editText_Price);
+        etLocation = (EditText) view.findViewById(R.id.editText_Location);
         return view;
     }
 
@@ -142,33 +144,40 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
         int id = v.getId();
         if (id == R.id.button_add) {
             // add
-            String item = etItem.getText().toString();
+            String item = etSalesItem.getText().toString();
+            String location = etLocation.getText().toString();
             Double price;
             if (etPrice.getText().toString() != "") {
                 price = Double.parseDouble(etPrice.getText().toString());
             } else {
                 price = 0.0;
             }
-
-            if (mListener.onAddItemClick(item, price)) {
-                addToList(item, price);
+            if (mListener.onAddSalesItemClick(item, price, location)) {
+                addToList(item, price, location);
             }
         } else if (id == R.id.button_remove) {
             // remove
-            String item = etItem.getText().toString();
-            if (mListener.onRemoveItemClick(item)) {
-                removeFromList(item);
+            String item = etSalesItem.getText().toString();
+            Double price;
+            if (etPrice.getText().toString() != "") {
+                price = Double.parseDouble(etPrice.getText().toString());
+            } else {
+                price = 0.0;
+            }
+            String location = etLocation.getText().toString();
+            if (mListener.onRemoveSalesItemClick(item, price, location)) {
+                removeFromList(item, price, location);
             }
         }
     }
 
-    public void addToList(String item, Double price) {
-        items.add(item + "     " + price);
+    public void addToList(String item, Double price, String location) {
+        salesItems.add(item + " " + price + " " + location);
         adapter.notifyDataSetChanged();
     }
 
-    public void removeFromList(String item) {
-        items.remove(item + "     " + db.getPrice(curUser, item));
+    public void removeFromList(String item, Double price, String location) {
+        salesItems.remove(item + " " + price + " " + location);
         adapter.notifyDataSetChanged();
     }
 
@@ -183,7 +192,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public boolean onAddItemClick(String item, Double price);
-        public boolean onRemoveItemClick(String item);
+        public boolean onAddSalesItemClick(String item, Double price, String location);
+        public boolean onRemoveSalesItemClick(String item, Double price, String location);
     }
 }

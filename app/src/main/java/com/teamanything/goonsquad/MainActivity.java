@@ -20,10 +20,11 @@ import android.widget.Toast;
 import java.util.List;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
+import com.teamanything.goonsquad.database.SaleItem;
 import com.teamanything.goonsquad.database.User;
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener, WishListFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener, WishListFragment.OnFragmentInteractionListener, SalesReportFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -208,6 +209,27 @@ public class MainActivity extends ActionBarActivity
     @Override
     public boolean onRemoveItemClick(String item) {
         if (db.deleteWish(curUser, item)) {
+            return true;
+        } else {
+            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onAddSalesItemClick(String item, Double price, String location) {
+        if (db.addItem(new SaleItem(item, price, location))) {
+            return true;
+        } else {
+            Toast.makeText(this, "Could Not Add Item", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onRemoveSalesItemClick(String item, Double price, String location) {
+
+        if (db.addItem(new SaleItem(item, price, location))) {
             return true;
         } else {
             Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
