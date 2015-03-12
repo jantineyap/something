@@ -13,14 +13,11 @@ import com.teamanything.goonsquad.database.User;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link UserDialog.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link UserDialog#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class UserDialog extends DialogFragment {
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_EMAIL = "email";
     private static final String ARG_NAME = "name";
 
@@ -32,7 +29,7 @@ public class UserDialog extends DialogFragment {
      * this fragment using the provided parameters.
      *
      * @param user User
-     * @return A new instance of fragment UserFragment.
+     * @return A new instance of fragment UserDialog.
      */
     public static UserDialog newInstance(User user) {
         UserDialog fragment = new UserDialog();
@@ -49,7 +46,7 @@ public class UserDialog extends DialogFragment {
      *
      * @param email Email
      * @param name Name
-     * @return A new instance of fragment UserFragment.
+     * @return A new instance of fragment UserDialog.
      */
     public static UserDialog newInstance(String email, String name) {
         UserDialog fragment = new UserDialog();

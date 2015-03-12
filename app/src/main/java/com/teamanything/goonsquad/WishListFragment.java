@@ -44,6 +44,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
     private ArrayAdapter<String> adapter;
     private DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
+    private List<WishListItem> holder;
 
     private EditText etItem;
     private EditText etPrice;
@@ -144,7 +145,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
             // add
             String item = etItem.getText().toString();
             Double price;
-            if (etPrice.getText().toString() != "") {
+            if (!etPrice.getText().toString().equals("")) {
                 price = Double.parseDouble(etPrice.getText().toString());
             } else {
                 price = 0.0;
@@ -163,12 +164,22 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
     }
 
     public void addToList(String item, Double price) {
-        items.add(item + "     " + price);
-        adapter.notifyDataSetChanged();
+        if (!items.contains(item + "     " + price)) {
+            items.add(item + "     " + price);
+            adapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(this.getActivity(), "Already Added", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void removeFromList(String item) {
-        items.remove(item + "     " + db.getPrice(curUser, item));
+        double pTemp = 0;
+        for (WishListItem x : holder) {
+            if (x.getItem().equals(item)) {
+                pTemp = x.getPrice();
+            }
+        }
+        items.remove(item + "     " + pTemp);
         adapter.notifyDataSetChanged();
     }
 
