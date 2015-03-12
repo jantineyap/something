@@ -37,7 +37,6 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String CUR_USER = "CUR_USER";
-    // TODO: Rename and change types of parameters
     private int sectionNum;
     private String curUser;
     private List<String> items;
