@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
-import com.teamanything.goonsquad.database.Item;
 import com.teamanything.goonsquad.database.User;
+import com.teamanything.goonsquad.database.WishListItem;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,7 +44,6 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
     private ArrayAdapter<String> adapter;
     private DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
-    private List<Item> holder;
 
     private EditText etItem;
     private EditText etPrice;
@@ -87,9 +86,9 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
 
         db = DatabaseHandler.getInstance(getActivity());
 
-        holder = db.getWishlist(curUser);
+        List<WishListItem> holder = db.getWishlist(curUser);
         List<String> temp = new ArrayList<>();
-        for (Item i : holder) {
+        for (WishListItem i : holder) {
             temp.add(i.getItem() + "     " + i.getPrice());
         }
         items = temp;
@@ -145,7 +144,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
             // add
             String item = etItem.getText().toString();
             Double price;
-            if (!etPrice.getText().toString().equals("")) {
+            if (etPrice.getText().toString() != "") {
                 price = Double.parseDouble(etPrice.getText().toString());
             } else {
                 price = 0.0;
@@ -164,22 +163,12 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
     }
 
     public void addToList(String item, Double price) {
-        if (!items.contains(item + "     " + price)) {
-            items.add(item + "     " + price);
-            adapter.notifyDataSetChanged();
-        } else {
-            Toast.makeText(this.getActivity(), "Already Added", Toast.LENGTH_SHORT).show();
-        }
+        items.add(item + "     " + price);
+        adapter.notifyDataSetChanged();
     }
 
     public void removeFromList(String item) {
-        double pTemp = 0;
-        for (Item x : holder) {
-            if (x.getItem().equals(item)) {
-                pTemp = x.getPrice();
-            }
-        }
-        items.remove(item + "     " + pTemp);
+        items.remove(item + "     " + db.getPrice(curUser, item));
         adapter.notifyDataSetChanged();
     }
 
