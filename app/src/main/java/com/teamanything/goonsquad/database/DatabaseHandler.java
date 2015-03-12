@@ -41,6 +41,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String KEY_ITEM = "item"; // item in itemsTable
     private static final String KEY_PRICE = "price"; // price in itemsTable
+    private static final String KEY_LOC = "location"; //location in itemsTable
+    private static final String KEY_BOOLEAN = "boolean"; //boolean values
 
 
     /**
@@ -79,11 +81,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_FRIEND + " varchar(255)" + ");";
         String CREATE_ITEMS_TABLE = "CREATE TABLE " + TABLE_ITEMS + "("
                 +KEY_ITEM + " varchar(255),"
-                +KEY_PRICE + " DOUBLE" + ");";
+                +KEY_PRICE + " DOUBLE,"
+                +KEY_LOC + " varchar(255));";
         String CREATE_WISHLIST_TABLE = "CREATE TABLE " + TABLE_WISHLIST + "("
                 +KEY_USER + " varchar(255),"
                 +KEY_ITEM + " varchar(255),"
-                +KEY_PRICE+ " DOUBLE" + ");";
+                +KEY_PRICE+ " DOUBLE,"
+                +KEY_BOOLEAN + " INT);";
         db.execSQL(CREATE_CONTACTS_TABLE);
         db.execSQL(CREATE_FRIENDS_TABLE);
         db.execSQL(CREATE_ITEMS_TABLE);
@@ -310,6 +314,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_USER, user);
         values.put(KEY_ITEM, item);
         values.put(KEY_PRICE, price);
+        values.put(KEY_BOOLEAN, 0);
 
         //Insert value into row
         database.insert(TABLE_WISHLIST, null, values);
@@ -324,7 +329,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @param item, the wanted item
      * @return boolean of item or not
      */
-    public boolean isWish(String user, String item) {
+    private boolean isWish(String user, String item) {
         //Select query
         String selectQuery = "SELECT  * FROM " + TABLE_WISHLIST;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -366,8 +371,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @param user, the user
      * @return list of items that is user's wishlist
      */
-    public List<Item> getWishlist(String user) {
-        List<Item> items = new ArrayList<>();
+    public List<WishListItem> getWishlist(String user) {
+        List<WishListItem> items = new ArrayList<>();
 
         //Select query
         String selectQuery = "SELECT  * FROM " + TABLE_WISHLIST;
@@ -378,12 +383,37 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 if (user.equals(cursor.getString(0))){
-                    Item item = new WishListItem(cursor.getString(1), cursor.getDouble(2));
+                    WishListItem item = new WishListItem(cursor.getString(1), cursor.getDouble(2));
+                    if (cursor.getInt(3) == 1) {
+                        item.setMatched(true);
+                    } else if (isOnSale(cursor.getString(1), cursor.getDouble(2))) {
+                        item.setMatched(true);
+                        ContentValues value = new ContentValues();
+                        value.put(KEY_BOOLEAN, 1);
+                        String where = KEY_USER + "=? AND" + KEY_ITEM + "=?";
+                        db.update(TABLE_WISHLIST, value, where, new String[]{user, cursor.getString(1)});
+                    }
                     items.add(item);
                 }
             } while (cursor.moveToNext());
         }
         return items;
+    }
+
+    private boolean isOnSale(String item, double price) {
+        String selectQuery = "SELECT " + KEY_PRICE + " FROM " + TABLE_ITEMS
+                + " WHERE " + KEY_ITEM + "= " + item;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                if (price >= cursor.getDouble(0)){
+                    return true;
+                }
+            } while (cursor.moveToNext());
+        }
+        return false;
     }
 
     public double getPrice(String user, String item) {
@@ -401,5 +431,85 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return -1;
+    }
+
+    /**
+     * add an item to items table
+     * if item exists checks to see if price is lower and replaces in database
+     *
+     * @param item, the item
+     * @return boolean of success or not
+     */
+    public boolean addItem(SaleItem item) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        if (isSaleItem(item)) {
+            return true;
+        }
+
+        //Creates value and puts email and pass into it
+        ContentValues values = new ContentValues();
+        values.put(KEY_ITEM, item.getItem());
+        values.put(KEY_PRICE, item.getPrice());
+        values.put(KEY_LOC, item.getLocation());
+
+        //Insert value into row
+        database.insert(TABLE_ITEMS, null, values);
+        database.close();
+        return true;
+    }
+
+    /**
+     * helper for addItem
+     * if item exists checks to see if price is lower and replaces in database
+     *
+     * @param item, the item
+     * @return boolean whether or not item exists
+     */
+    private boolean isSaleItem(SaleItem item) {
+        //Select query
+        String selectQuery = "SELECT  * FROM " + TABLE_ITEMS;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //loop through all the rows
+        if (cursor.moveToFirst()){
+            do {
+                if (cursor.getString(0).equals(item.getItem())
+                        && cursor.getString(2).equals(item.getLocation())){
+
+                    // if price is lower then replace
+                    if(cursor.getDouble(1) > item.getPrice()) {
+                        ContentValues value =  new ContentValues();
+                        value.put(KEY_PRICE, item.getPrice());
+                        String where = KEY_ITEM + " = ?" + " AND "
+                                + KEY_LOC + " = ?";
+                        String[] args = new String[]{item.getItem(), item.getLocation()};
+                        db.update(TABLE_ITEMS, value, where, args);
+                    }
+
+                    return true;
+                }
+            } while (cursor.moveToNext());
+        }
+        return false;
+    }
+
+    public List<SaleItem> getSaleList() {
+        List<SaleItem> items = new ArrayList<>();
+
+        //Select query
+        String selectQuery = "SELECT  * FROM " + TABLE_ITEMS;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //loops through rows adding friends to list
+        if (cursor.moveToFirst()) {
+            do {
+                SaleItem item = new SaleItem(cursor.getString(0)
+                        , cursor.getDouble(1), cursor.getString(2));
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+        return items;
     }
 }

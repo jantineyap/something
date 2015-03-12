@@ -3,7 +3,7 @@ package com.teamanything.goonsquad.database;
 /**
  * Created by Adam on 3/11/2015.
  */
-public class WishListItem implements Item {
+public class WishListItem {
 
     private String item;
     private double price;
@@ -21,16 +21,14 @@ public class WishListItem implements Item {
         isMatched = false;
     }
 
-    @Override
     public String getItem() {
         return item;
     }
-    @Override
+
     public double getPrice() {
         return price;
     }
 
-    @Override
     public void setPrice(double price) {
         this.price = price;
     }
