@@ -110,10 +110,9 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_wish_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_sales_report, container, false);
 
         view.findViewById(R.id.button_add).setOnClickListener(this);
-        view.findViewById(R.id.button_remove).setOnClickListener(this);
 
         etSalesItem = (EditText) view.findViewById(R.id.editText_Item);
         etPrice = (EditText) view.findViewById(R.id.editText_Price);
@@ -152,34 +151,17 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
             } else {
                 price = 0.0;
             }
-            if (mListener.onAddSalesItemClick(item, location, price)) {
-                addToList(item, location, price);
-            }
-        } else if (id == R.id.button_remove) {
-            // remove
-            String item = etSalesItem.getText().toString();
-            Double price;
-            if (etPrice.getText().toString() != "") {
-                price = Double.parseDouble(etPrice.getText().toString());
-            } else {
-                price = 0.0;
-            }
-            String location = etLocation.getText().toString();
-            if (mListener.onRemoveSalesItemClick(item, location, price)) {
-                removeFromList(item, location, price);
+            if (mListener.onAddSaleItemClick(item, price, location)) {
+                addToList(item, price, location);
             }
         }
     }
 
-    public void addToList(String item, String location, Double price) {
+    public void addToList(String item, Double price, String location) {
         salesItems.add(item + " " + location + " " + price);
         adapter.notifyDataSetChanged();
     }
 
-    public void removeFromList(String item, String location, Double price) {
-        salesItems.remove(item + " " + location + " " + price);
-        adapter.notifyDataSetChanged();
-    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -192,7 +174,6 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public boolean onAddSalesItemClick(String item, String location, Double price);
-        public boolean onRemoveSalesItemClick(String item, String location, Double price);
+        public boolean onAddSaleItemClick(String item, Double price, String location);
     }
 }

@@ -82,7 +82,7 @@ public class MainActivity extends ActionBarActivity
         mFragment = new ListFragment();
         switch (position + 1) {
             case 1:
-                mFragment = PlaceholderFragment.newInstance(position + 1);
+                mFragment = SalesReportFragment.newInstance(position + 1, curUser);
                 break;
             case 2:
                 mFragment = WishListFragment.newInstance(position + 1, curUser);
@@ -217,22 +217,11 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public boolean onAddSalesItemClick(String item, Double price, String location) {
-        if (db.addItem(new SaleItem(item, location, price))) {
+    public boolean onAddSaleItemClick(String item, Double price, String location) {
+        if (db.addItem(new SaleItem(item, price, location))) {
             return true;
         } else {
             Toast.makeText(this, "Could Not Add Item", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-    }
-
-    @Override
-    public boolean onRemoveSalesItemClick(String item, Double price, String location) {
-
-        if (db.addItem(new SaleItem(item, location, price))) {
-            return true;
-        } else {
-            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
