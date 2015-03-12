@@ -3,7 +3,7 @@ package com.teamanything.goonsquad.database;
 /**
  * Created by Adam on 3/11/2015.
  */
-public class SaleItem implements Item {
+public class SaleItem {
 
     private String item;
     private String location; //TODO Change to actual location
@@ -22,17 +22,14 @@ public class SaleItem implements Item {
         this.price = price;
     }
 
-    @Override
     public String getItem() {
         return item;
     }
 
-    @Override
     public double getPrice() {
         return price;
     }
 
-    @Override
     public void setPrice(double price) {
         this.price = price;
     }

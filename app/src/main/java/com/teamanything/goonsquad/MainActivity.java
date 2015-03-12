@@ -218,7 +218,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onAddSalesItemClick(String item, Double price, String location) {
-        if (db.addItem(new SaleItem(item, price, location))) {
+        if (db.addItem(new SaleItem(item, location, price))) {
             return true;
         } else {
             Toast.makeText(this, "Could Not Add Item", Toast.LENGTH_SHORT).show();
@@ -229,7 +229,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public boolean onRemoveSalesItemClick(String item, Double price, String location) {
 
-        if (db.addItem(new SaleItem(item, price, location))) {
+        if (db.addItem(new SaleItem(item, location, price))) {
             return true;
         } else {
             Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();

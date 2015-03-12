@@ -152,8 +152,8 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
             } else {
                 price = 0.0;
             }
-            if (mListener.onAddSalesItemClick(item, price, location)) {
-                addToList(item, price, location);
+            if (mListener.onAddSalesItemClick(item, location, price)) {
+                addToList(item, location, price);
             }
         } else if (id == R.id.button_remove) {
             // remove
@@ -165,19 +165,19 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
                 price = 0.0;
             }
             String location = etLocation.getText().toString();
-            if (mListener.onRemoveSalesItemClick(item, price, location)) {
-                removeFromList(item, price, location);
+            if (mListener.onRemoveSalesItemClick(item, location, price)) {
+                removeFromList(item, location, price);
             }
         }
     }
 
-    public void addToList(String item, Double price, String location) {
-        salesItems.add(item + " " + price + " " + location);
+    public void addToList(String item, String location, Double price) {
+        salesItems.add(item + " " + location + " " + price);
         adapter.notifyDataSetChanged();
     }
 
-    public void removeFromList(String item, Double price, String location) {
-        salesItems.remove(item + " " + price + " " + location);
+    public void removeFromList(String item, String location, Double price) {
+        salesItems.remove(item + " " + location + " " + price);
         adapter.notifyDataSetChanged();
     }
 
@@ -192,7 +192,7 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public boolean onAddSalesItemClick(String item, Double price, String location);
-        public boolean onRemoveSalesItemClick(String item, Double price, String location);
+        public boolean onAddSalesItemClick(String item, String location, Double price);
+        public boolean onRemoveSalesItemClick(String item, String location, Double price);
     }
 }
