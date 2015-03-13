@@ -386,7 +386,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     WishListItem item = new WishListItem(cursor.getString(1), cursor.getDouble(2));
                     if (cursor.getInt(3) == 1) {
                         item.setMatched(true);
-                    } else if (isOnSale(cursor.getString(1), cursor.getDouble(2))) {
+                    } else if (saleCheck(cursor.getString(1), cursor.getDouble(2)) != null) {
                         item.setMatched(true);
                         ContentValues value = new ContentValues();
                         value.put(KEY_BOOLEAN, 1);
@@ -400,20 +400,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
-    private boolean isOnSale(String item, double price) {
-        String selectQuery = "SELECT " + KEY_PRICE + " FROM " + TABLE_ITEMS
-                + " WHERE " + KEY_ITEM + "= " + item;
+    private SaleItem saleCheck(String item, double price) {
+        String selectQuery = "SELECT * FROM " + TABLE_ITEMS;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
-                if (price >= cursor.getDouble(0)){
-                    return true;
+                if (cursor.getString(0).equals(item)) {
+                    if (price >= cursor.getDouble(1)) {
+                        return new SaleItem(cursor.getString(0), cursor.getDouble(1), cursor.getString(2));
+                    }
                 }
             } while (cursor.moveToNext());
         }
-        return false;
+        return null;
     }
 
     public double getPrice(String user, String item) {
@@ -494,6 +495,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return false;
     }
 
+    public boolean deleteSaleItem(SaleItem item) {
+        if (isSaleItem(item)) {
+            SQLiteDatabase database = this.getWritableDatabase();
+            database.delete(TABLE_ITEMS, "ROWID = (SELECT Max(ROWID) FROM "
+                            + TABLE_ITEMS + " WHERE " + KEY_ITEM + "=? AND " + KEY_LOC + "=?)",
+                    new String[] { item.getItem(), item.getLocation() });
+            database.close();
+            return true;
+        }
+        return false;
+    }
+
     public List<SaleItem> getSaleList() {
         List<SaleItem> items = new ArrayList<>();
 
@@ -512,4 +525,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return items;
     }
+
+    public List<SaleItem> getUserSales(String user) {
+        List<SaleItem> items = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + TABLE_WISHLIST;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                if (cursor.getString(0).equals(user)) {
+                    SaleItem hasSale = saleCheck(cursor.getString(1), cursor.getDouble(2));
+                    if (hasSale != null) {
+                        items.add(hasSale);
+                    }
+                }
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
 }
