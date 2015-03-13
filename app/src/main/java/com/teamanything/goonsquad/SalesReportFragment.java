@@ -22,6 +22,7 @@ import java.util.List;
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.User;
 import com.teamanything.goonsquad.database.SaleItem;
+import com.teamanything.goonsquad.database.WishListItem;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -97,6 +98,19 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
         adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_list_item_1, salesItems);
         setListAdapter(adapter);
+        List<WishListItem> wishList = db.getWishlist(curUser);
+        if (!wishList.isEmpty()) {
+            String notification = "Sales for ";
+            for (WishListItem i : wishList) {
+                if (i.isMatched()) {
+                    notification += (i.getItem() + " ");
+                }
+            }
+            Toast.makeText(getActivity(), notification, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getActivity(), "No Notifications", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void onListItemClick(ListView l, View v, int position, long id) {

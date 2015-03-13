@@ -141,7 +141,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
         int id = v.getId();
         String item = etItem.getText().toString();
         Double price;
-        if (etPrice.getText().toString() != "") {
+        if (!etPrice.getText().toString().equals("")) {
             price = Double.parseDouble(etPrice.getText().toString());
         } else {
             price = 0.0;
