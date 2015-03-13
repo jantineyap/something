@@ -401,15 +401,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     private SaleItem saleCheck(String item, double price) {
-        String selectQuery = "SELECT * FROM " + TABLE_ITEMS
-                + " WHERE " + KEY_ITEM + "= " + item;
+        String selectQuery = "SELECT * FROM " + TABLE_ITEMS;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
-                if (price >= cursor.getDouble(1)){
-                    return new SaleItem(cursor.getString(0), cursor.getDouble(1), cursor.getString(2));
+                if (cursor.getString(0).equals(item)) {
+                    if (price >= cursor.getDouble(1)) {
+                        return new SaleItem(cursor.getString(0), cursor.getDouble(1), cursor.getString(2));
+                    }
                 }
             } while (cursor.moveToNext());
         }
@@ -528,16 +529,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public List<SaleItem> getUserSales(String user) {
         List<SaleItem> items = new ArrayList<>();
 
-        String selectQuery = "SELECT" + KEY_ITEM + " AND " + KEY_PRICE + " FROM "
-                + TABLE_WISHLIST + " WHERE " + KEY_USER + "= " + user;
+        String selectQuery = "SELECT * FROM " + TABLE_WISHLIST;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
-                SaleItem hasSale = saleCheck(cursor.getString(0), cursor.getDouble(1));
-                if (hasSale != null) {
-                    items.add(hasSale);
+                if (cursor.getString(0).equals(user)) {
+                    SaleItem hasSale = saleCheck(cursor.getString(1), cursor.getDouble(2));
+                    if (hasSale != null) {
+                        items.add(hasSale);
+                    }
                 }
             } while (cursor.moveToNext());
         }
