@@ -139,24 +139,22 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        String item = etItem.getText().toString();
+        Double price;
+        if (etPrice.getText().toString() != "") {
+            price = Double.parseDouble(etPrice.getText().toString());
+        } else {
+            price = 0.0;
+        }
         if (id == R.id.button_add) {
             // add
-            String item = etItem.getText().toString();
-            Double price;
-            if (etPrice.getText().toString() != "") {
-                price = Double.parseDouble(etPrice.getText().toString());
-            } else {
-                price = 0.0;
-            }
-
             if (mListener.onAddItemClick(item, price)) {
                 addToList(item, price);
             }
         } else if (id == R.id.button_remove) {
             // remove
-            String item = etItem.getText().toString();
             if (mListener.onRemoveItemClick(item)) {
-                removeFromList(item);
+                removeFromList(item, price);
             }
         }
     }
@@ -166,8 +164,8 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
         adapter.notifyDataSetChanged();
     }
 
-    public void removeFromList(String item) {
-        items.remove(item + "     " + db.getPrice(curUser, item));
+    public void removeFromList(String item, Double price) {
+        items.remove(item + "     " + price);
         adapter.notifyDataSetChanged();
     }
 

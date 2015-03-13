@@ -390,7 +390,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         item.setMatched(true);
                         ContentValues value = new ContentValues();
                         value.put(KEY_BOOLEAN, 1);
-                        String where = KEY_USER + "=? AND" + KEY_ITEM + "=?";
+                        String where = KEY_USER + "=? AND " + KEY_ITEM + "=?";
                         db.update(TABLE_WISHLIST, value, where, new String[]{user, cursor.getString(1)});
                     }
                     items.add(item);

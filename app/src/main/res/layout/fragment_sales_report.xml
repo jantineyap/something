@@ -32,7 +32,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
+                android:inputType="textCapWords"
                 android:hint="Location"
                 android:ems="10"
                 android:id="@+id/editText_Location"
