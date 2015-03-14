@@ -22,6 +22,7 @@ import java.util.List;
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.SaleItem;
 import com.teamanything.goonsquad.database.User;
+import com.teamanything.goonsquad.database.WishListItem;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener, WishListFragment.OnFragmentInteractionListener, SalesReportFragment.OnFragmentInteractionListener {
@@ -197,8 +198,8 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public boolean onAddItemClick(String item, Double price) {
-        if (db.addWish(curUser, item, price)) {
+    public boolean onAddItemClick(WishListItem wishListItem) {
+        if (db.addWish(curUser, wishListItem)) {
             return true;
         } else {
             Toast.makeText(this, "Could Not Add Item", Toast.LENGTH_SHORT).show();
@@ -207,8 +208,8 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public boolean onRemoveItemClick(String item) {
-        if (db.deleteWish(curUser, item)) {
+    public boolean onRemoveItemClick(WishListItem wishListItem) {
+        if (db.deleteWish(curUser, wishListItem)) {
             return true;
         } else {
             Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
@@ -217,8 +218,8 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public boolean onAddSaleItemClick(String item, Double price, String location) {
-        if (db.addItem(new SaleItem(item, price, location))) {
+    public boolean onAddSaleItemClick(SaleItem saleItem) {
+        if (db.addItem(saleItem)) {
             return true;
         } else {
             Toast.makeText(this, "Could Not Add Item", Toast.LENGTH_SHORT).show();

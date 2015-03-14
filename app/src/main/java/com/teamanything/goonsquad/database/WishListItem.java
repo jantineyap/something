@@ -41,4 +41,16 @@ public class WishListItem {
         isMatched = matched;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof WishListItem)) { return false; }
+        if (this == o) { return true; }
+        WishListItem that = (WishListItem) o;
+        return this.item.equals(that.item) && this.price == that.price;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

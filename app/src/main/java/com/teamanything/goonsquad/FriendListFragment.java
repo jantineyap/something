@@ -1,6 +1,7 @@
 package com.teamanything.goonsquad;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.ListFragment;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -140,14 +142,27 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
             String email = etEmail.getText().toString();
             if (mListener.onAddFriendClick(email)) {
                 addToList(email);
+
+                    // clear and deselect EditText
+                etEmail.setText("");
+                etEmail.clearFocus();
             }
         } else if (id == R.id.button_remove) {
             // remove
             String email = etEmail.getText().toString();
             if (mListener.onRemoveFriendClick(email)) {
                 removeFromList(email);
+
+                // clear and deselect EditText
+                etEmail.setText("");
+                etEmail.clearFocus();
             }
         }
+
+        // hides soft input (keyboard)
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(etEmail.getWindowToken(), 0);
     }
 
     public void addToList(String email) {

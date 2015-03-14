@@ -295,6 +295,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return false;
     }
 
+    public boolean addWish(String user, WishListItem wishListItem) {
+        return addWish(user, wishListItem.getItem(), wishListItem.getPrice());
+    }
+
     /**
      * add a wish to Wishlist
      *
@@ -344,6 +348,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return false;
+    }
+
+    public boolean deleteWish(String user, WishListItem wishListItem) {
+        return deleteWish(user, wishListItem.getItem());
     }
 
     /**

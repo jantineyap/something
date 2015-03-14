@@ -1,26 +1,21 @@
 package com.teamanything.goonsquad;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.ListFragment;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.teamanything.goonsquad.R;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
-import com.teamanything.goonsquad.database.User;
 import com.teamanything.goonsquad.database.SaleItem;
 
 /**
@@ -33,15 +28,12 @@ import com.teamanything.goonsquad.database.SaleItem;
  */
 public class SalesReportFragment extends ListFragment implements View.OnClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String CUR_USER = "CUR_USER";
-    // TODO: Rename and change types of parameters
     private int sectionNum;
     private String curUser;
-    private List<String> salesItems;
-    private ArrayAdapter<String> adapter;
+    private List<SaleItem> saleItems;
+    private SaleItemAdapter adapter;
     private DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
 
@@ -49,15 +41,16 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
     private EditText etPrice;
     private EditText etLocation;
 
+    private Button bAdd;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param sectionNumber
-     * @param curUser
+     * @param sectionNumber the section number
+     * @param curUser the current user
      * @return A new instance of fragment WishListFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SalesReportFragment newInstance(int sectionNumber, String curUser) {
         SalesReportFragment fragment = new SalesReportFragment();
         Bundle args = new Bundle();
@@ -75,7 +68,6 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
      * this fragment using the provided parameters.
      *
      * @param savedInstanceState for the oncreate
-     * @return A new instance of fragment WishListFragment.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,23 +79,14 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
 
         db = DatabaseHandler.getInstance(getActivity());
 
-        List<SaleItem> holder = db.getSaleList();
-        List<String> temp = new ArrayList<>();
-        for (SaleItem i : holder) {
-            temp.add(i.getItem() + " " + i.getPrice() + " " + i.getLocation());
-        }
-        salesItems = temp;
-
-        adapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_list_item_1, salesItems);
+        saleItems = db.getSaleList();
+        adapter = new SaleItemAdapter(getActivity(), saleItems);
         setListAdapter(adapter);
     }
 
     public void onListItemClick(ListView l, View v, int position, long id) {
         // do something with the data
         super.onListItemClick(l, v, position, id);
-        // Get the item that was clicked
-        String set = l.getItemAtPosition(position).toString();
     }
 
     @Override
@@ -112,11 +95,12 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sales_report, container, false);
 
-        view.findViewById(R.id.button_add).setOnClickListener(this);
-
         etSalesItem = (EditText) view.findViewById(R.id.editText_Item);
         etPrice = (EditText) view.findViewById(R.id.editText_Price);
         etLocation = (EditText) view.findViewById(R.id.editText_Location);
+
+        bAdd = (Button) view.findViewById(R.id.button_add);
+        bAdd.setOnClickListener(this);
         return view;
     }
 
@@ -143,25 +127,44 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
         int id = v.getId();
         if (id == R.id.button_add) {
             // add
-            String item = etSalesItem.getText().toString();
-            String location = etLocation.getText().toString();
             Double price;
-            if (etPrice.getText().toString() != "") {
+            if (!etPrice.getText().toString().equals("")) {
                 price = Double.parseDouble(etPrice.getText().toString());
             } else {
                 price = 0.0;
             }
-            if (mListener.onAddSaleItemClick(item, price, location)) {
-                addToList(item, price, location);
+            SaleItem saleItem = new SaleItem(etSalesItem.getText().toString(), price, etLocation.getText().toString());
+            if (mListener.onAddSaleItemClick(saleItem)) {
+                addToList(saleItem);
+
+                // clear and deselect EditTexts
+                etSalesItem.setText("");
+                etLocation.setText("");
+                etPrice.setText("");
+                etSalesItem.clearFocus();
+                etLocation.clearFocus();
+                etPrice.clearFocus();
             }
+
+
+            // hides soft input (keyboard)
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(etPrice.getWindowToken(), 0);
         }
     }
 
-    public void addToList(String item, Double price, String location) {
-        salesItems.add(item + " " + location + " " + price);
-        adapter.notifyDataSetChanged();
+    private void addToList(SaleItem saleItem) {
+        if (!saleItems.contains(saleItem)) {
+            adapter.add(saleItem);
+        }
     }
 
+    private void removeFromList(SaleItem saleItem) {
+        if (!saleItems.contains(saleItem)) {
+            adapter.remove(saleItem);
+        }
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -174,6 +177,6 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public boolean onAddSaleItemClick(String item, Double price, String location);
+        public boolean onAddSaleItemClick(SaleItem saleItem);
     }
 }

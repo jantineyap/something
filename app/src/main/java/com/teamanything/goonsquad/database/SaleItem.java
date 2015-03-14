@@ -38,4 +38,16 @@ public class SaleItem {
         return location;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof SaleItem)) { return false; }
+        if (this == o) { return true; }
+        SaleItem that = (SaleItem) o;
+        return this.item.equals(that.item) && this.location.equals(that.location) && this.price == that.price;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

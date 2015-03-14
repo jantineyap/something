@@ -1,26 +1,20 @@
 package com.teamanything.goonsquad;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.ListFragment;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.teamanything.goonsquad.R;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
-import com.teamanything.goonsquad.database.User;
 import com.teamanything.goonsquad.database.WishListItem;
 
 /**
@@ -39,8 +33,8 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
     private static final String CUR_USER = "CUR_USER";
     private int sectionNum;
     private String curUser;
-    private List<String> items;
-    private ArrayAdapter<String> adapter;
+    private List<WishListItem> items;
+    private WishListItemAdapter adapter;
     private DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
 
@@ -51,8 +45,8 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param sectionNumber
-     * @param curUser
+     * @param sectionNumber the section number
+     * @param curUser the current user
      * @return A new instance of fragment WishListFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -73,7 +67,6 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
      * this fragment using the provided parameters.
      *
      * @param savedInstanceState for the oncreate
-     * @return A new instance of fragment WishListFragment.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,23 +78,15 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
 
         db = DatabaseHandler.getInstance(getActivity());
 
-        List<WishListItem> holder = db.getWishlist(curUser);
-        List<String> temp = new ArrayList<>();
-        for (WishListItem i : holder) {
-            temp.add(i.getItem() + "     " + i.getPrice());
-        }
-        items = temp;
+        items = db.getWishlist(curUser);
 
-        adapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_list_item_1, items);
+        adapter = new WishListItemAdapter(getActivity(), items);
         setListAdapter(adapter);
     }
 
     public void onListItemClick(ListView l, View v, int position, long id) {
         // do something with the data
         super.onListItemClick(l, v, position, id);
-        // Get the item that was clicked
-        String set = l.getItemAtPosition(position).toString();
     }
 
     @Override
@@ -139,34 +124,53 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        String item = etItem.getText().toString();
-        Double price;
-        if (etPrice.getText().toString() != "") {
+        Double price = 0.0;
+        if (!etPrice.getText().toString().equals("")) {
             price = Double.parseDouble(etPrice.getText().toString());
-        } else {
-            price = 0.0;
         }
+        WishListItem wishListItem = new WishListItem(etItem.getText().toString(), price);
         if (id == R.id.button_add) {
             // add
-            if (mListener.onAddItemClick(item, price)) {
-                addToList(item, price);
+            if (mListener.onAddItemClick(wishListItem)) {
+                addToList(wishListItem);
+
+                // clear EditTexts
+                etItem.setText("");
+                etPrice.setText("");
+
+                // deselects EditTexts
+                etItem.clearFocus();
+                etPrice.clearFocus();
             }
         } else if (id == R.id.button_remove) {
             // remove
-            if (mListener.onRemoveItemClick(item)) {
-                removeFromList(item, price);
+            if (mListener.onRemoveItemClick(wishListItem)) {
+                removeFromList(wishListItem);
+
+                // clear and deselect EditTexts
+                etItem.setText("");
+                etPrice.setText("");
+                etItem.clearFocus();
+                etPrice.clearFocus();
             }
+        }
+
+        // hides soft input (keyboard)
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(etPrice.getWindowToken(), 0);
+    }
+
+    private void addToList(WishListItem wishListItem) {
+        if (!items.contains(wishListItem)) {
+            adapter.add(wishListItem);
         }
     }
 
-    public void addToList(String item, Double price) {
-        items.add(item + "     " + price);
-        adapter.notifyDataSetChanged();
-    }
-
-    public void removeFromList(String item, Double price) {
-        items.remove(item + "     " + price);
-        adapter.notifyDataSetChanged();
+    private void removeFromList(WishListItem wishListItem) {
+        if (items.contains(wishListItem)) {
+            adapter.remove(wishListItem);
+        }
     }
 
     /**
@@ -180,7 +184,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public boolean onAddItemClick(String item, Double price);
-        public boolean onRemoveItemClick(String item);
+        public boolean onAddItemClick(WishListItem wishListItem);
+        public boolean onRemoveItemClick(WishListItem wishListItem);
     }
 }
