@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.teamanything.goonsquad.database.SaleItem;
+import com.teamanything.goonsquad.database.WishListItem;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -15,15 +15,15 @@ import java.util.List;
 /**
  * Created by Adam on 3/13/2015.
  *
- * Customer Adapter for a ListView which contains three TextViews.
+ * Customer Adapter for a ListView which contains one TextView.
  */
-public class SaleItemAdapter extends BaseAdapter {
+public class FriendListAdapter extends BaseAdapter {
 
     Context context;
-    List<SaleItem> data;
+    List<String> data;
     private static LayoutInflater inflater = null;
 
-    public SaleItemAdapter(Context context, List<SaleItem> data) {
+    public FriendListAdapter(Context context, List<String> data) {
         this.context = context;
         this.data = data;
         inflater = (LayoutInflater) context
@@ -36,7 +36,7 @@ public class SaleItemAdapter extends BaseAdapter {
     }
 
     @Override
-    public SaleItem getItem(int position) {
+    public String getItem(int position) {
         return data.get(position);
     }
 
@@ -49,29 +49,25 @@ public class SaleItemAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         if (vi == null)
-            vi = inflater.inflate(R.layout.row_sale_item, parent, false);
+            vi = inflater.inflate(R.layout.row_friend_item, parent, false);
 
-        SaleItem saleItem = data.get(position);
+        String friend = data.get(position);
 
-        TextView item = (TextView) vi.findViewById(R.id.textView_Item);
-        TextView location = (TextView) vi.findViewById(R.id.textView_Location);
-        TextView price = (TextView) vi.findViewById(R.id.textView_Price);
+        TextView item = (TextView) vi.findViewById(R.id.textView_Friend);
 
-        item.setText(saleItem.getItem());
-        location.setText(saleItem.getLocation());
-        price.setText(NumberFormat.getCurrencyInstance().format(saleItem.getPrice()));
+        item.setText(friend);
         return vi;
     }
 
-    public void add(SaleItem saleItem) {
-        data.add(saleItem);
+    public void add(String friend) {
+        data.add(friend);
         this.notifyDataSetChanged();
     }
 
-    public void remove(SaleItem saleItem) {
-        data.remove(saleItem);
+    public void remove(String friend) {
+        data.remove(friend);
         this.notifyDataSetChanged();
     }
 
-    public boolean contains(SaleItem saleItem) { return data.contains(saleItem); }
+    public boolean contains(String friend) { return data.contains(friend); }
 }

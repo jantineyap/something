@@ -70,4 +70,6 @@ public class WishListItemAdapter extends BaseAdapter {
         data.remove(wishListItem);
         this.notifyDataSetChanged();
     }
+
+    public boolean contains(WishListItem wishListItem) { return data.contains(wishListItem); }
 }
