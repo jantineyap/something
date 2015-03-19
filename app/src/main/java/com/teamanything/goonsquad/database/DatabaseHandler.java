@@ -390,18 +390,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //loops through rows adding friends to list
         if (cursor.moveToFirst()) {
             do {
-                if (user.equals(cursor.getString(0))){
-                    WishListItem item = new WishListItem(cursor.getString(1), cursor.getDouble(2));
-                    if (cursor.getInt(3) == 1) {
-                        item.setMatched(true);
-                    } else if (saleCheck(cursor.getString(1), cursor.getDouble(2)) != null) {
-                        item.setMatched(true);
-                        ContentValues value = new ContentValues();
-                        value.put(KEY_BOOLEAN, 1);
-                        String where = KEY_USER + "=? AND " + KEY_ITEM + "=?";
-                        db.update(TABLE_WISHLIST, value, where, new String[]{user, cursor.getString(1)});
+                if (cursor.getString(0) != null) {
+                    if (cursor.getString(0).equals(user)) {
+                        WishListItem item = new WishListItem(cursor.getString(1), cursor.getDouble(2));
+                        if (cursor.getInt(3) == 1) {
+                            item.setMatched(true);
+                        } else if (saleCheck(cursor.getString(1), cursor.getDouble(2)) != null) {
+                            item.setMatched(true);
+                            ContentValues value = new ContentValues();
+                            value.put(KEY_BOOLEAN, 1);
+                            String where = KEY_USER + "=? AND " + KEY_ITEM + "=?";
+                            db.update(TABLE_WISHLIST, value, where, new String[]{user, cursor.getString(1)});
+                        }
+                        items.add(item);
                     }
-                    items.add(item);
                 }
             } while (cursor.moveToNext());
         }

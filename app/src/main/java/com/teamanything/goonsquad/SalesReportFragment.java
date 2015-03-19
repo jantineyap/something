@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.SaleItem;
+import com.teamanything.goonsquad.database.WishListItem;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +78,19 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
         DatabaseHandler db = DatabaseHandler.getInstance(getActivity());
         adapter = new SaleItemAdapter(getActivity(), db.getSaleList());
         setListAdapter(adapter);
+        List<WishListItem> wishList = db.getWishlist(curUser);
+        if (!wishList.isEmpty()) {
+            String notification = "Sales for ";
+            for (WishListItem i : wishList) {
+                if (i.isMatched()) {
+                    notification += (i.getItem() + " ");
+                }
+            }
+            Toast.makeText(getActivity(), notification, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getActivity(), "No Notifications", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void onListItemClick(ListView l, View v, int position, long id) {
