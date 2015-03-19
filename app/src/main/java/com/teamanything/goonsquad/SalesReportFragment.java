@@ -5,15 +5,16 @@ import android.content.Context;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-
-import java.util.List;
+import android.widget.TextView;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.SaleItem;
@@ -30,18 +31,15 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String CUR_USER = "CUR_USER";
-    private int sectionNum;
     private String curUser;
-    private List<SaleItem> saleItems;
-    private SaleItemAdapter adapter;
-    private DatabaseHandler db;
+
     private OnFragmentInteractionListener mListener;
 
     private EditText etSalesItem;
     private EditText etPrice;
     private EditText etLocation;
 
-    private Button bAdd;
+    private SaleItemAdapter adapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -67,20 +65,17 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param savedInstanceState for the oncreate
+     * @param savedInstanceState for the onCreate
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            sectionNum = getArguments().getInt(ARG_SECTION_NUMBER);
             curUser = getArguments().getString(CUR_USER);
         }
 
-        db = DatabaseHandler.getInstance(getActivity());
-
-        saleItems = db.getSaleList();
-        adapter = new SaleItemAdapter(getActivity(), saleItems);
+        DatabaseHandler db = DatabaseHandler.getInstance(getActivity());
+        adapter = new SaleItemAdapter(getActivity(), db.getSaleList());
         setListAdapter(adapter);
     }
 
@@ -99,8 +94,20 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
         etPrice = (EditText) view.findViewById(R.id.editText_Price);
         etLocation = (EditText) view.findViewById(R.id.editText_Location);
 
-        bAdd = (Button) view.findViewById(R.id.button_add);
-        bAdd.setOnClickListener(this);
+        final View vb = view.findViewById(R.id.button_add);
+
+        etPrice.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    onClick(vb);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        view.findViewById(R.id.button_add).setOnClickListener(this);
         return view;
     }
 
@@ -125,6 +132,7 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        if (!checkError()) { return; }
         if (id == R.id.button_add) {
             // add
             Double price;
@@ -134,8 +142,8 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
                 price = 0.0;
             }
             SaleItem saleItem = new SaleItem(etSalesItem.getText().toString(), price, etLocation.getText().toString());
-            if (mListener.onAddSaleItemClick(saleItem)) {
-                addToList(saleItem);
+            if (mListener.onAddClick(saleItem)) {
+                add(saleItem);
 
                 // clear and deselect EditTexts
                 etSalesItem.setText("");
@@ -154,15 +162,46 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
         }
     }
 
-    private void addToList(SaleItem saleItem) {
-        if (!saleItems.contains(saleItem)) {
-            adapter.add(saleItem);
+    // returns true if all fields are error free
+    private boolean checkError() {
+        etSalesItem.setError(null);
+        etLocation.setError(null);
+        etPrice.setError(null);
+
+        String item = etSalesItem.getText().toString();
+        String location = etLocation.getText().toString();
+        String price = etPrice.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        if (TextUtils.isEmpty(item)) {
+            etSalesItem.setError(getString(R.string.error_field_required));
+            focusView = etSalesItem;
+            cancel = true;
         }
+
+        if (TextUtils.isEmpty(location)) {
+            etLocation.setError(getString(R.string.error_field_required));
+            focusView = etLocation;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(price)) {
+            etPrice.setError(getString(R.string.error_field_required));
+            focusView = etPrice;
+            cancel = true;
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+        }
+        return !cancel;
     }
 
-    private void removeFromList(SaleItem saleItem) {
-        if (!saleItems.contains(saleItem)) {
-            adapter.remove(saleItem);
+    private void add(SaleItem saleItem) {
+        if (!adapter.contains(saleItem)) {
+            adapter.add(saleItem);
         }
     }
 
@@ -177,6 +216,6 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public boolean onAddSaleItemClick(SaleItem saleItem);
+        public boolean onAddClick(SaleItem saleItem);
     }
 }

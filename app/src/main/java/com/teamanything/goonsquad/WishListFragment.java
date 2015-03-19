@@ -5,14 +5,16 @@ import android.content.Context;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
-
-import java.util.List;
+import android.widget.TextView;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.WishListItem;
@@ -27,16 +29,13 @@ import com.teamanything.goonsquad.database.WishListItem;
  */
 public class WishListFragment extends ListFragment implements View.OnClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String CUR_USER = "CUR_USER";
-    private int sectionNum;
     private String curUser;
-    private List<WishListItem> items;
-    private WishListItemAdapter adapter;
-    private DatabaseHandler db;
+
     private OnFragmentInteractionListener mListener;
+
+    private WishListItemAdapter adapter;
 
     private EditText etItem;
     private EditText etPrice;
@@ -49,7 +48,6 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
      * @param curUser the current user
      * @return A new instance of fragment WishListFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static WishListFragment newInstance(int sectionNumber, String curUser) {
         WishListFragment fragment = new WishListFragment();
         Bundle args = new Bundle();
@@ -66,21 +64,18 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param savedInstanceState for the oncreate
+     * @param savedInstanceState for the onCreate
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            sectionNum = getArguments().getInt(ARG_SECTION_NUMBER);
             curUser = getArguments().getString(CUR_USER);
         }
 
-        db = DatabaseHandler.getInstance(getActivity());
+        DatabaseHandler db = DatabaseHandler.getInstance(getActivity());
 
-        items = db.getWishlist(curUser);
-
-        adapter = new WishListItemAdapter(getActivity(), items);
+        adapter = new WishListItemAdapter(getActivity(), db.getWishlist(curUser));
         setListAdapter(adapter);
     }
 
@@ -100,6 +95,20 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
 
         etItem = (EditText) view.findViewById(R.id.editText_Item);
         etPrice = (EditText) view.findViewById(R.id.editText_Price);
+
+        final View vb = view.findViewById(R.id.button_add);
+
+        etPrice.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    onClick(vb);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         return view;
     }
 
@@ -124,6 +133,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        if (!checkError()) { return; }
         Double price = 0.0;
         if (!etPrice.getText().toString().equals("")) {
             price = Double.parseDouble(etPrice.getText().toString());
@@ -131,8 +141,8 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
         WishListItem wishListItem = new WishListItem(etItem.getText().toString(), price);
         if (id == R.id.button_add) {
             // add
-            if (mListener.onAddItemClick(wishListItem)) {
-                addToList(wishListItem);
+            if (mListener.onAddClick(wishListItem)) {
+                add(wishListItem);
 
                 // clear EditTexts
                 etItem.setText("");
@@ -144,8 +154,8 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
             }
         } else if (id == R.id.button_remove) {
             // remove
-            if (mListener.onRemoveItemClick(wishListItem)) {
-                removeFromList(wishListItem);
+            if (mListener.onRemoveClick(wishListItem)) {
+                remove(wishListItem);
 
                 // clear and deselect EditTexts
                 etItem.setText("");
@@ -161,14 +171,42 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
         imm.hideSoftInputFromWindow(etPrice.getWindowToken(), 0);
     }
 
-    private void addToList(WishListItem wishListItem) {
-        if (!items.contains(wishListItem)) {
+    // returns true if all fields are error free
+    private boolean checkError() {
+        etItem.setError(null);
+        etPrice.setError(null);
+
+        String item = etItem.getText().toString();
+        String price = etPrice.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        if (TextUtils.isEmpty(item)) {
+            etItem.setError(getString(R.string.error_field_required));
+            focusView = etItem;
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(price)) {
+            etPrice.setError(getString(R.string.error_field_required));
+            focusView = etPrice;
+            cancel = true;
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+        }
+        return !cancel;
+    }
+
+    private void add(WishListItem wishListItem) {
+        if (!adapter.contains(wishListItem)) {
             adapter.add(wishListItem);
         }
     }
 
-    private void removeFromList(WishListItem wishListItem) {
-        if (items.contains(wishListItem)) {
+    private void remove(WishListItem wishListItem) {
+        if (adapter.contains(wishListItem)) {
             adapter.remove(wishListItem);
         }
     }
@@ -184,7 +222,7 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public boolean onAddItemClick(WishListItem wishListItem);
-        public boolean onRemoveItemClick(WishListItem wishListItem);
+        public boolean onAddClick(WishListItem wishListItem);
+        public boolean onRemoveClick(WishListItem wishListItem);
     }
 }

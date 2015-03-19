@@ -1,6 +1,5 @@
 package com.teamanything.goonsquad;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,12 +8,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -58,7 +53,7 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        mFragment = new PlaceholderFragment().newInstance(0);
+        mFragment = new Fragment();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -177,8 +172,8 @@ public class MainActivity extends ActionBarActivity
         userDialog.show(getSupportFragmentManager(), "fragment_user_dialog");
     }
 
-    @Override
-    public boolean onAddFriendClick(String email) {
+    @Override // from FriendListFragment
+    public boolean onAddClick(String email) {
         if (db.addConnection(curUser, email)) {
             return true;
         } else {
@@ -187,8 +182,8 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    public boolean onRemoveFriendClick(String email) {
+    @Override // from FriendListFragment
+    public boolean onRemoveClick(String email) {
         if (db.deleteConnection(curUser, email)) {
             return true;
         } else {
@@ -197,8 +192,8 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    public boolean onAddItemClick(WishListItem wishListItem) {
+    @Override // from WishListFragment
+    public boolean onAddClick(WishListItem wishListItem) {
         if (db.addWish(curUser, wishListItem)) {
             return true;
         } else {
@@ -207,8 +202,8 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    public boolean onRemoveItemClick(WishListItem wishListItem) {
+    @Override // from WishListFragment
+    public boolean onRemoveClick(WishListItem wishListItem) {
         if (db.deleteWish(curUser, wishListItem)) {
             return true;
         } else {
@@ -217,8 +212,8 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    public boolean onAddSaleItemClick(SaleItem saleItem) {
+    @Override // from SalesReportFragment
+    public boolean onAddClick(SaleItem saleItem) {
         if (db.addItem(saleItem)) {
             return true;
         } else {
@@ -226,48 +221,4 @@ public class MainActivity extends ActionBarActivity
             return false;
         }
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main_activity, container, false);
-            View tv = rootView.findViewById(R.id.section_label);
-            int section = getArguments().getInt(ARG_SECTION_NUMBER);
-            ((TextView) tv).setText(Integer.toString(section));
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
-    }
-
 }

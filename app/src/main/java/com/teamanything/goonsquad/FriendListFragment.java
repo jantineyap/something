@@ -3,22 +3,18 @@ package com.teamanything.goonsquad;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.ListFragment;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import com.teamanything.goonsquad.R;
-
-import java.util.List;
+import android.widget.TextView;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.User;
@@ -33,15 +29,11 @@ import com.teamanything.goonsquad.database.User;
  */
 public class FriendListFragment extends ListFragment implements View.OnClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_CUR_USER = "CUR_USER";
-    // TODO: Rename and change types of parameters
-    private int sectionNum;
+
     private String curUser;
-    private List<String> friends;
-    private ArrayAdapter<String> adapter;
+    private FriendListAdapter adapter;
     private DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
 
@@ -51,11 +43,10 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param sectionNumber
-     * @param curUser
+     * @param sectionNumber the section number
+     * @param curUser the current user
      * @return A new instance of fragment FriendListFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static FriendListFragment newInstance(int sectionNumber, String curUser) {
         FriendListFragment fragment = new FriendListFragment();
         Bundle args = new Bundle();
@@ -72,23 +63,18 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param savedInstanceState for the oncreate
-     * @return A new instance of fragment FriendListFragment.
+     * @param savedInstanceState for the onCreate
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            sectionNum = getArguments().getInt(ARG_SECTION_NUMBER);
             curUser = getArguments().getString(ARG_CUR_USER);
         }
 
         db = DatabaseHandler.getInstance(getActivity());
 
-        friends = db.getFriends(curUser);
-
-        adapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_list_item_1, friends);
+        adapter = new FriendListAdapter(getActivity(), db.getFriends(curUser));
         setListAdapter(adapter);
     }
 
@@ -112,6 +98,19 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
         view.findViewById(R.id.button_remove).setOnClickListener(this);
 
         etEmail = (EditText) view.findViewById(R.id.editText_email);
+
+        final View vb = view.findViewById(R.id.button_add);
+
+        etEmail.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    onClick(vb);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         return view;
     }
@@ -137,24 +136,26 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        if (!checkError()) { return; }
         if (id == R.id.button_add) {
             // add
             String email = etEmail.getText().toString();
-            if (mListener.onAddFriendClick(email)) {
-                addToList(email);
+            if (mListener.onAddClick(email)) {
+                add(email);
 
-                    // clear and deselect EditText
+                // clear and deselect EditText
                 etEmail.setText("");
                 etEmail.clearFocus();
             }
         } else if (id == R.id.button_remove) {
             // remove
             String email = etEmail.getText().toString();
-            if (mListener.onRemoveFriendClick(email)) {
-                removeFromList(email);
+            if (mListener.onRemoveClick(email)) {
+                remove(email);
 
                 // clear and deselect EditText
                 etEmail.setText("");
+
                 etEmail.clearFocus();
             }
         }
@@ -165,14 +166,37 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
         imm.hideSoftInputFromWindow(etEmail.getWindowToken(), 0);
     }
 
-    public void addToList(String email) {
-        friends.add(email);
-        adapter.notifyDataSetChanged();
+    // returns true if all fields are error free
+    private boolean checkError() {
+        etEmail.setError(null);
+
+        String email = etEmail.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        if (TextUtils.isEmpty(email)) {
+            etEmail.setError(getString(R.string.error_field_required));
+            focusView = etEmail;
+            cancel = true;
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+        }
+        return !cancel;
     }
 
-    public void removeFromList(String email) {
-        friends.remove(email);
-        adapter.notifyDataSetChanged();
+    public void add(String email) {
+        if (!adapter.contains(email)) {
+            adapter.add(email);
+        }
+    }
+
+    public void remove(String email) {
+        if (adapter.contains(email)) {
+            adapter.remove(email);
+        }
     }
 
     /**
@@ -186,8 +210,8 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public boolean onAddFriendClick(String email);
-        public boolean onRemoveFriendClick(String email);
+        public boolean onAddClick(String email);
+        public boolean onRemoveClick(String email);
         public void showUserDialog(User user);
     }
 }

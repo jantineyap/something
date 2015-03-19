@@ -22,6 +22,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
             android:noHistory="true"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
@@ -30,7 +31,8 @@
             android:label="@string/title_activity_registration"
             android:noHistory="true" >
         </activity>
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
     </application>
