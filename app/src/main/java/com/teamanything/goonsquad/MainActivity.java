@@ -12,15 +12,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.List;
-
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.SaleItem;
 import com.teamanything.goonsquad.database.User;
 import com.teamanything.goonsquad.database.WishListItem;
 
+import java.util.List;
+
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener, WishListFragment.OnFragmentInteractionListener, SalesReportFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener,
+        WishListFragment.OnFragmentInteractionListener, SalesReportFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -172,9 +173,9 @@ public class MainActivity extends ActionBarActivity
         userDialog.show(getSupportFragmentManager(), "fragment_user_dialog");
     }
 
-    @Override // from FriendListFragment
-    public boolean onAddClick(String email) {
-        if (db.addConnection(curUser, email)) {
+     @Override // from FriendListFragment
+    public boolean onRemoveClick(String email) {
+        if (db.deleteConnection(curUser, email)) {
             return true;
         } else {
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
@@ -182,9 +183,20 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    @Override // from WishListFragment
+    public boolean onRemoveClick(WishListItem wishListItem) {
+        if (db.deleteWish(curUser, wishListItem)) {
+            return true;
+        } else {
+            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+
     @Override // from FriendListFragment
-    public boolean onRemoveClick(String email) {
-        if (db.deleteConnection(curUser, email)) {
+    public boolean onAddClick(String email) {
+        if (db.addConnection(curUser, email)) {
             return true;
         } else {
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
@@ -198,16 +210,6 @@ public class MainActivity extends ActionBarActivity
             return true;
         } else {
             Toast.makeText(this, "Could Not Add Item", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-    }
-
-    @Override // from WishListFragment
-    public boolean onRemoveClick(WishListItem wishListItem) {
-        if (db.deleteWish(curUser, wishListItem)) {
-            return true;
-        } else {
-            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
             return false;
         }
     }

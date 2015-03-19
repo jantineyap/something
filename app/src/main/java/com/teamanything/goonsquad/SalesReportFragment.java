@@ -2,9 +2,9 @@ package com.teamanything.goonsquad;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -84,9 +84,13 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
         List<WishListItem> wishList = db.getWishlist(curUser);
         if (!wishList.isEmpty()) {
             String notification = "Sales for ";
-            for (WishListItem i : wishList) {
-                if (i.isMatched()) {
-                    notification += (i.getItem() + " ");
+            for (int i = 0; i < wishList.size(); i++) {
+                if (wishList.get(i).isMatched()) {
+                    if (i != wishList.size() - 1) {
+                        notification += (wishList.get(i).getItem() + ", ");
+                    } else {
+                        notification += (wishList.get(i).getItem());
+                    }
                 }
             }
             Toast.makeText(getActivity(), notification, Toast.LENGTH_LONG).show();
