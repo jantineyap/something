@@ -223,6 +223,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return false;
 
     }
+
+    public boolean addConnection(User user1, User user2) {
+        return addConnection(user1.getEmail(), user2.getEmail());
+    }
     /**
      * deleteFriend method that takes a user String and email to delete
      *
@@ -296,7 +300,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public boolean addWish(String user, WishListItem wishListItem) {
-        return addWish(user, wishListItem.getItem(), wishListItem.getPrice());
+        return addWish(user, wishListItem.getItem(), wishListItem.getMaxPrice());
+    }
+
+    public boolean addWish(User user, WishListItem wishListItem) {
+        return addWish(user.getEmail(), wishListItem.getItem(), wishListItem.getMaxPrice());
     }
 
     /**
@@ -304,10 +312,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      *
      * @param user, the user
      * @param item, the wanted item
-     * @param price, the desired price
+     * @param maxPrice, the desired price
      * @return boolean of success or not
      */
-    public boolean addWish(String user, String item, double price) {
+    public boolean addWish(String user, String item, double maxPrice) {
         if (isWish(user, item)) {
             deleteWish(user, item);
         }
@@ -317,7 +325,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_USER, user);
         values.put(KEY_ITEM, item);
-        values.put(KEY_PRICE, price);
+        values.put(KEY_PRICE, maxPrice);
         values.put(KEY_BOOLEAN, 0);
 
         //Insert value into row

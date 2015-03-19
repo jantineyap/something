@@ -24,4 +24,13 @@
         android:layout_below="@+id/go_to_sign_in_button"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="setup database"
+        android:id="@+id/button_setup_database"
+        android:onClick="setupDatabase"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

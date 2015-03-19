@@ -6,9 +6,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
+import com.teamanything.goonsquad.database.SaleItem;
 import com.teamanything.goonsquad.database.User;
+import com.teamanything.goonsquad.database.WishListItem;
 
 
 public class WelcomeActivity extends ActionBarActivity {
@@ -31,6 +34,41 @@ public class WelcomeActivity extends ActionBarActivity {
         startActivity(new Intent(this, RegistrationActivity.class));
     }
 
+    public void setupDatabase(View view) {
+        DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+
+        boolean success = false;
+
+        User a = new User("aaaa@aaaa.com", "aaaa", "aaaa");
+        User b = new User("bbbb@bbbb.com", "bbbb", "bbbb");
+        User c = new User("cccc@cccc.com", "cccc", "cccc");
+        success = db.addUser(a);
+        success = db.addUser(b);
+        success = db.addUser(c);
+        success = db.addConnection(a, b);
+        success = db.addConnection(a, c);
+
+        SaleItem s1 = new SaleItem("Item 1", 1.0, "Atlanta, GA");
+        SaleItem s2 = new SaleItem("Item 2", 2.0, "Charleston, SC");
+        SaleItem s3 = new SaleItem("Item 3", 3.0, "Chicago, IL");
+        success = db.addItem(s1);
+        success = db.addItem(s2);
+        success = db.addItem(s3);
+
+        WishListItem w1 = new WishListItem("Item 1", 3.0);
+        WishListItem w2 = new WishListItem("Item 2", 1.0);
+        WishListItem w3 = new WishListItem("Item 2", 2.0);
+        success = db.addWish(a, w1);
+        success = db.addWish(a, w2);
+        success = db.addWish(b, w3);
+        success = db.addWish(c, w3);
+
+        if (success) {
+            Toast.makeText(this, "Database setup properly", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Database setup failed", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

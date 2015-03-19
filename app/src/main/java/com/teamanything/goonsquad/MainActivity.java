@@ -173,27 +173,6 @@ public class MainActivity extends ActionBarActivity
         userDialog.show(getSupportFragmentManager(), "fragment_user_dialog");
     }
 
-     @Override // from FriendListFragment
-    public boolean onRemoveClick(String email) {
-        if (db.deleteConnection(curUser, email)) {
-            return true;
-        } else {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-    }
-
-    @Override // from WishListFragment
-    public boolean onRemoveClick(WishListItem wishListItem) {
-        if (db.deleteWish(curUser, wishListItem)) {
-            return true;
-        } else {
-            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-    }
-
-
     @Override // from FriendListFragment
     public boolean onAddClick(String email) {
         if (db.addConnection(curUser, email)) {
@@ -223,4 +202,27 @@ public class MainActivity extends ActionBarActivity
             return false;
         }
     }
+
+    @Override // from FriendListFragment
+    public boolean onRemoveClick(String email) {
+        if (db.deleteConnection(curUser, email)) {
+            return true;
+        } else {
+            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    @Override // from WishListFragment
+    public boolean onRemoveClick(WishListItem wishListItem) {
+        if (db.deleteWish(curUser, wishListItem)) {
+            return true;
+        } else {
+            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+
+
 }

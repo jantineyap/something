@@ -57,7 +57,7 @@ public class WishListItemAdapter extends BaseAdapter {
         TextView price = (TextView) vi.findViewById(R.id.textView_Price);
 
         item.setText(data.get(position).getItem());
-        price.setText(NumberFormat.getCurrencyInstance().format(wishListItem.getPrice()));
+        price.setText(NumberFormat.getCurrencyInstance().format(wishListItem.getMaxPrice()));
         return vi;
     }
 
