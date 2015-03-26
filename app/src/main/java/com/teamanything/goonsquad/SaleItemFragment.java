@@ -75,8 +75,9 @@ public class SaleItemFragment extends Fragment implements OnMapReadyCallback {
         ((TextView) view.findViewById(R.id.textView_item)).setText(mItem);
         ((TextView) view.findViewById(R.id.textView_price)).setText(mPrice.toString());
 
-        SupportMapFragment supportMapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment supportMapFragment = SupportMapFragment.newInstance();
         supportMapFragment.getMapAsync(this);
+        getFragmentManager().beginTransaction().add(R.id.map_container, supportMapFragment).commit();
 
         return view;
     }
