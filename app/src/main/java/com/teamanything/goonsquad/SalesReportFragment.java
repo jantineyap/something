@@ -41,7 +41,6 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
 
     private EditText etSalesItem;
     private EditText etPrice;
-    private EditText etLocation;
 
     private SaleItemAdapter adapter;
 
@@ -114,7 +113,7 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
 
         etSalesItem = (EditText) view.findViewById(R.id.editText_Item);
         etPrice = (EditText) view.findViewById(R.id.editText_Price);
-        etLocation = (EditText) view.findViewById(R.id.editText_Location);
+
 
         final View vb = view.findViewById(R.id.button_add);
 
@@ -163,16 +162,14 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
             } else {
                 price = 0.0;
             }
-            SaleItem saleItem = new SaleItem(etSalesItem.getText().toString(), price, etLocation.getText().toString());
+            SaleItem saleItem = new SaleItem(etSalesItem.getText().toString(), price);
             if (mListener.onAddClick(saleItem)) {
                 add(saleItem);
 
                 // clear and deselect EditTexts
                 etSalesItem.setText("");
-                etLocation.setText("");
                 etPrice.setText("");
                 etSalesItem.clearFocus();
-                etLocation.clearFocus();
                 etPrice.clearFocus();
             }
 
@@ -187,11 +184,9 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
     // returns true if all fields are error free
     private boolean checkError() {
         etSalesItem.setError(null);
-        etLocation.setError(null);
         etPrice.setError(null);
 
         String item = etSalesItem.getText().toString();
-        String location = etLocation.getText().toString();
         String price = etPrice.getText().toString();
 
         boolean cancel = false;
@@ -200,12 +195,6 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
         if (TextUtils.isEmpty(item)) {
             etSalesItem.setError(getString(R.string.error_field_required));
             focusView = etSalesItem;
-            cancel = true;
-        }
-
-        if (TextUtils.isEmpty(location)) {
-            etLocation.setError(getString(R.string.error_field_required));
-            focusView = etLocation;
             cancel = true;
         }
 

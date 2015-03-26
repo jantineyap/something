@@ -48,9 +48,9 @@ public class WelcomeActivity extends ActionBarActivity {
         success = db.addConnection(a, b);
         success = db.addConnection(a, c);
 
-        SaleItem s1 = new SaleItem("Item 1", 1.0, "Atlanta, GA");
-        SaleItem s2 = new SaleItem("Item 2", 2.0, "Charleston, SC");
-        SaleItem s3 = new SaleItem("Item 3", 3.0, "Chicago, IL");
+        SaleItem s1 = new SaleItem("Item 1", 1.0);
+        SaleItem s2 = new SaleItem("Item 2", 2.0);
+        SaleItem s3 = new SaleItem("Item 3", 3.0);
         success = db.addItem(s1);
         success = db.addItem(s2);
         success = db.addItem(s3);

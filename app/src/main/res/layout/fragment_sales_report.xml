@@ -11,59 +11,41 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:id="@+id/addRemoveLayout">
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:inputType="text"
             android:hint="@string/prompt_item_name"
             android:ems="10"
             android:padding="4dp"
+            android:layout_weight="1"
             android:id="@+id/editText_Item"
             android:imeOptions="actionNext"
-            android:nextFocusForward="@+id/editText_Location"/>
+            android:nextFocusForward="@+id/editText_Price"/>
 
-        <LinearLayout
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapWords"
-                android:hint="@string/prompt_location"
-                android:ems="10"
-                android:id="@+id/editText_Location"
-                android:imeOptions="actionNext"
-                android:nextFocusForward="@+id/editText_Price"
-                android:padding="4dp"
-                android:layout_weight="1"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:hint="@string/prompt_dollar"
-                android:ems="10"
-                android:id="@+id/editText_Price"
-                android:imeOptions="actionDone"
-                android:padding="4dp"
-                android:layout_weight="3"/>
+            android:inputType="numberDecimal"
+            android:hint="@string/prompt_dollar"
+            android:ems="10"
+            android:id="@+id/editText_Price"
+            android:imeOptions="actionDone"
+            android:padding="4dp"
+            android:layout_weight="4"/>
 
         </LinearLayout>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="@string/action_add"
-            android:id="@+id/button_add"
-            style="?android:attr/buttonBarButtonStyle" />
-
-    </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/action_add"
+        android:id="@+id/button_add"
+        style="?android:attr/buttonBarButtonStyle" />
 
     <ListView
         android:layout_width="wrap_content"
