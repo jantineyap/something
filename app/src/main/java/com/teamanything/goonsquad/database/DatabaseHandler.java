@@ -496,10 +496,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     if(cursor.getDouble(1) > item.getPrice()) {
                         ContentValues value =  new ContentValues();
                         value.put(KEY_PRICE, item.getPrice());
-                        String where = KEY_ITEM + " = ?" + " AND "
-                                + KEY_LOCX + " = ?" + " AND "
-                                + KEY_LOCY + " = ?";
-                        String[] args = new String[]{item.getItem(), item.getX(), item.getY()};
+                        String where = KEY_ITEM + " = ?";
+                        String[] args = new String[]{item.getItem()};
                         db.update(TABLE_ITEMS, value, where, args);
                     }
 
@@ -514,9 +512,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (isSaleItem(item)) {
             SQLiteDatabase database = this.getWritableDatabase();
             database.delete(TABLE_ITEMS, "ROWID = (SELECT Max(ROWID) FROM "
-                            + TABLE_ITEMS + " WHERE " + KEY_ITEM + "=? AND "
-                            + KEY_LOCX + "=? AND " + KEY_LOCY + "=?)",
-                    new String[] { item.getItem(), item.getX(), item.getY() });
+                            + TABLE_ITEMS + " WHERE " + KEY_ITEM + "=?)",
+                    new String[] { item.getItem() });
             database.close();
             return true;
         }
