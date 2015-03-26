@@ -559,4 +559,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
+    public SaleItem getSaleItem(String item, double price) {
+        String selectQuery = "SELECT * FROM " + TABLE_ITEMS;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                if (cursor.getString(0).equals(item)) {
+                    if (price == cursor.getDouble(1)) {
+                        return new SaleItem(cursor.getString(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3));
+                    }
+                }
+            } while (cursor.moveToNext());
+        }
+        return null;
+    }
+
 }

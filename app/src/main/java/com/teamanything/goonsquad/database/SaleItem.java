@@ -51,7 +51,7 @@ public class SaleItem {
     }
 
     public String getLocation () {
-        String location = x + ", " + y;
+        String location = x + "," + y;
         return location;
     }
 
