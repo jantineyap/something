@@ -23,7 +23,8 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener,
-        WishListFragment.OnFragmentInteractionListener, SalesReportFragment.OnFragmentInteractionListener {
+        WishListFragment.OnFragmentInteractionListener, SalesReportFragment.OnFragmentInteractionListener,
+        SaleItemFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.

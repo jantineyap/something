@@ -72,8 +72,8 @@ public class SaleItemFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sale_item, container, false);
 
-        ((TextView) view.findViewById(R.id.textView_Item)).setText(mItem);
-        ((TextView) view.findViewById(R.id.textView_Price)).setText(mPrice.toString());
+        ((TextView) view.findViewById(R.id.textView_item)).setText(mItem);
+        ((TextView) view.findViewById(R.id.textView_price)).setText(mPrice.toString());
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
