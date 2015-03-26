@@ -41,7 +41,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String KEY_ITEM = "item"; // item in itemsTable
     private static final String KEY_PRICE = "price"; // price in itemsTable
-    private static final String KEY_LOC = "location"; //location in itemsTable
+    private static final String KEY_LOCX = "location_x"; //location in itemsTable
+    private static final String KEY_LOCY = "location_y"; //location in itemsTable
     private static final String KEY_BOOLEAN = "boolean"; //boolean values
 
 
@@ -82,7 +83,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_ITEMS_TABLE = "CREATE TABLE " + TABLE_ITEMS + "("
                 +KEY_ITEM + " varchar(255),"
                 +KEY_PRICE + " DOUBLE,"
-                +KEY_LOC + " varchar(255));";
+                +KEY_LOCX + " varchar(255),"
+                +KEY_LOCY + " varchar(255));";
         String CREATE_WISHLIST_TABLE = "CREATE TABLE " + TABLE_WISHLIST + "("
                 +KEY_USER + " varchar(255),"
                 +KEY_ITEM + " varchar(255),"
@@ -419,7 +421,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
                 if (cursor.getString(0).equals(item)) {
                     if (price >= cursor.getDouble(1)) {
-                        return new SaleItem(cursor.getString(0), cursor.getDouble(1), cursor.getString(2));
+                        return new SaleItem(cursor.getString(0), cursor.getDouble(1), cursor.getString(2), cursor.getString(3));
                     }
                 }
             } while (cursor.moveToNext());
@@ -461,7 +463,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_ITEM, item.getItem());
         values.put(KEY_PRICE, item.getPrice());
-        values.put(KEY_LOC, item.getLocation());
+        values.put(KEY_LOCX, item.getX());
+        values.put(KEY_LOCY, item.getY());
 
         //Insert value into row
         database.insert(TABLE_ITEMS, null, values);
@@ -486,15 +489,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()){
             do {
                 if (cursor.getString(0).equals(item.getItem())
-                        && cursor.getString(2).equals(item.getLocation())){
+                        && cursor.getString(2).equals(item.getX())
+                        && cursor.getString(3).equals(item.getY())){
 
                     // if price is lower then replace
                     if(cursor.getDouble(1) > item.getPrice()) {
                         ContentValues value =  new ContentValues();
                         value.put(KEY_PRICE, item.getPrice());
                         String where = KEY_ITEM + " = ?" + " AND "
-                                + KEY_LOC + " = ?";
-                        String[] args = new String[]{item.getItem(), item.getLocation()};
+                                + KEY_LOCX + " = ?" + " AND "
+                                + KEY_LOCY + " = ?";
+                        String[] args = new String[]{item.getItem(), item.getX(), item.getY()};
                         db.update(TABLE_ITEMS, value, where, args);
                     }
 
@@ -509,8 +514,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (isSaleItem(item)) {
             SQLiteDatabase database = this.getWritableDatabase();
             database.delete(TABLE_ITEMS, "ROWID = (SELECT Max(ROWID) FROM "
-                            + TABLE_ITEMS + " WHERE " + KEY_ITEM + "=? AND " + KEY_LOC + "=?)",
-                    new String[] { item.getItem(), item.getLocation() });
+                            + TABLE_ITEMS + " WHERE " + KEY_ITEM + "=? AND "
+                            + KEY_LOCX + "=? AND " + KEY_LOCY + "=?)",
+                    new String[] { item.getItem(), item.getX(), item.getY() });
             database.close();
             return true;
         }
@@ -529,7 +535,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 SaleItem item = new SaleItem(cursor.getString(0)
-                        , cursor.getDouble(1), cursor.getString(2));
+                        , cursor.getDouble(1), cursor.getString(2), cursor.getString(3));
                 items.add(item);
             } while (cursor.moveToNext());
         }
