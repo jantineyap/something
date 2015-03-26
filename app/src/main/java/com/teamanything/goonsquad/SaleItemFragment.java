@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.teamanything.goonsquad.database.SaleItem;
 
 
@@ -101,6 +103,9 @@ public class SaleItemFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(10, 10))
+                .title("Hello world"));
 
     }
 
