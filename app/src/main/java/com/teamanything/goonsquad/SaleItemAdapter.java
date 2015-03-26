@@ -54,11 +54,9 @@ public class SaleItemAdapter extends BaseAdapter {
         SaleItem saleItem = data.get(position);
 
         TextView item = (TextView) vi.findViewById(R.id.textView_Item);
-        TextView location = (TextView) vi.findViewById(R.id.textView_Location);
         TextView price = (TextView) vi.findViewById(R.id.textView_Price);
 
         item.setText(saleItem.getItem());
-        location.setText(saleItem.getLocation());
         price.setText(NumberFormat.getCurrencyInstance().format(saleItem.getPrice()));
         return vi;
     }

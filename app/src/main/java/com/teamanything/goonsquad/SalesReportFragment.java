@@ -86,10 +86,10 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
             String notification = "Sales for ";
             for (int i = 0; i < wishList.size(); i++) {
                 if (wishList.get(i).isMatched()) {
-                    if (i != wishList.size() - 1) {
-                        notification += (wishList.get(i).getItem() + ", ");
-                    } else {
+                    if (i == wishList.size() - 1) {
                         notification += (wishList.get(i).getItem());
+                    } else {
+                        notification += (wishList.get(i).getItem() + ", ");
                     }
                 }
             }
@@ -103,6 +103,7 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
     public void onListItemClick(ListView l, View v, int position, long id) {
         // do something with the data
         super.onListItemClick(l, v, position, id);
+        mListener.onListItemClick(l, v, position, id);
     }
 
     @Override
@@ -238,5 +239,6 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
      */
     public interface OnFragmentInteractionListener {
         public boolean onAddClick(SaleItem saleItem);
+        public void onListItemClick(ListView l, View v, int position, long id);
     }
 }

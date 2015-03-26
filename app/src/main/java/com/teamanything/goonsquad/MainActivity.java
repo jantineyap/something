@@ -10,6 +10,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
@@ -223,6 +225,10 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        SaleItem saleItem = ((SaleItemAdapter) l.getAdapter()).getItem(position);
+        Fragment newFragment = SaleItemFragment.newInstance(saleItem);
+        getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container, newFragment).commit();
+    }
 
 }
