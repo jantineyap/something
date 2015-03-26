@@ -10,6 +10,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
@@ -21,7 +23,8 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, FriendListFragment.OnFragmentInteractionListener,
-        WishListFragment.OnFragmentInteractionListener, SalesReportFragment.OnFragmentInteractionListener {
+        WishListFragment.OnFragmentInteractionListener, SalesReportFragment.OnFragmentInteractionListener,
+        SaleItemFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -173,27 +176,6 @@ public class MainActivity extends ActionBarActivity
         userDialog.show(getSupportFragmentManager(), "fragment_user_dialog");
     }
 
-     @Override // from FriendListFragment
-    public boolean onRemoveClick(String email) {
-        if (db.deleteConnection(curUser, email)) {
-            return true;
-        } else {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-    }
-
-    @Override // from WishListFragment
-    public boolean onRemoveClick(WishListItem wishListItem) {
-        if (db.deleteWish(curUser, wishListItem)) {
-            return true;
-        } else {
-            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-    }
-
-
     @Override // from FriendListFragment
     public boolean onAddClick(String email) {
         if (db.addConnection(curUser, email)) {
@@ -216,6 +198,10 @@ public class MainActivity extends ActionBarActivity
 
     @Override // from SalesReportFragment
     public boolean onAddClick(SaleItem saleItem) {
+
+        // TODO open MapView to get Location
+        // getSupportFragmentManager().beginTransaction().replace(container, fragment).addToBackStack(null).commit();
+
         if (db.addItem(saleItem)) {
             return true;
         } else {
@@ -223,4 +209,31 @@ public class MainActivity extends ActionBarActivity
             return false;
         }
     }
+
+    @Override // from FriendListFragment
+    public boolean onRemoveClick(String email) {
+        if (db.deleteConnection(curUser, email)) {
+            return true;
+        } else {
+            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    @Override // from WishListFragment
+    public boolean onRemoveClick(WishListItem wishListItem) {
+        if (db.deleteWish(curUser, wishListItem)) {
+            return true;
+        } else {
+            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        SaleItem saleItem = ((SaleItemAdapter) l.getAdapter()).getItem(position);
+        Fragment newFragment = SaleItemFragment.newInstance(saleItem);
+        getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container, newFragment).commit();
+    }
+
 }

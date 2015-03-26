@@ -2,6 +2,8 @@ package com.teamanything.goonsquad.database;
 
 /**
  * Created by Adam on 3/11/2015.
+ *
+ * Represents a SaleItem with a name, price, location
  */
 public class SaleItem {
 
@@ -60,7 +62,7 @@ public class SaleItem {
         if (!(o instanceof SaleItem)) { return false; }
         if (this == o) { return true; }
         SaleItem that = (SaleItem) o;
-        return this.item.equals(that.item) && this.x == that.x && this.y == that.y && this.price == that.price;
+        return this.item.equals(that.item) && this.price == that.price;
     }
 
     @Override

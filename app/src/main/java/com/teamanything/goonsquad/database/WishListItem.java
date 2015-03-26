@@ -2,22 +2,24 @@ package com.teamanything.goonsquad.database;
 
 /**
  * Created by Adam on 3/11/2015.
+ *
+ * A Wish List item which has a name and max price
  */
 public class WishListItem {
 
     private String item;
-    private double price;
+    private double maxPrice;
     private boolean isMatched;
 
     public WishListItem() {
         item = "";
-        price = 0.0;
+        maxPrice = 0.0;
         isMatched = false;
     }
 
-    public WishListItem(String item, double price) {
+    public WishListItem(String item, double maxPrice) {
         this.item = item;
-        this.price = price;
+        this.maxPrice = maxPrice;
         isMatched = false;
     }
 
@@ -25,12 +27,12 @@ public class WishListItem {
         return item;
     }
 
-    public double getPrice() {
-        return price;
+    public double getMaxPrice() {
+        return maxPrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setMaxPrice(double maxPrice) {
+        this.maxPrice = maxPrice;
     }
 
     public boolean isMatched() {
@@ -46,7 +48,7 @@ public class WishListItem {
         if (!(o instanceof WishListItem)) { return false; }
         if (this == o) { return true; }
         WishListItem that = (WishListItem) o;
-        return this.item.equals(that.item) && this.price == that.price;
+        return this.item.equals(that.item) && this.maxPrice == that.maxPrice;
     }
 
     @Override
