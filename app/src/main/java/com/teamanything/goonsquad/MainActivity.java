@@ -197,10 +197,6 @@ public class MainActivity extends ActionBarActivity
 
     @Override // from SalesReportFragment
     public boolean onAddClick(SaleItem saleItem) {
-
-        // TODO open MapView to get Location
-        // getSupportFragmentManager().beginTransaction().replace(container, fragment).addToBackStack(null).commit();
-
         if (db.addItem(saleItem)) {
             return true;
         } else {
