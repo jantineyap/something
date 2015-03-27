@@ -3,6 +3,7 @@ package com.teamanything.goonsquad;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,13 @@ public class SaleItemFragment extends Fragment implements OnMapReadyCallback {
     private static final String ARG_ITEM = "item";
     private static final String ARG_PRICE = "price";
     private static final String ARG_LOCATION = "location";
+    private static final String ARG_X = "x";
+    private static final String ARG_Y = "y";
 
     private String mItem = "";
     private String mLocation = "";
+    private Double mX = 0.0;
+    private Double mY = 0.0;
     private Double mPrice = 0.0;
 
 
@@ -50,6 +55,8 @@ public class SaleItemFragment extends Fragment implements OnMapReadyCallback {
         args.putString(ARG_ITEM, saleItem.getItem());
         args.putDouble(ARG_PRICE, saleItem.getPrice());
         args.putString(ARG_LOCATION, saleItem.getLocation());
+        args.putDouble(ARG_X, Double.parseDouble(saleItem.getX()));
+        args.putDouble(ARG_Y, Double.parseDouble(saleItem.getY()));
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +72,10 @@ public class SaleItemFragment extends Fragment implements OnMapReadyCallback {
             mItem = getArguments().getString(ARG_ITEM);
             mPrice = getArguments().getDouble(ARG_PRICE);
             mLocation = getArguments().getString(ARG_LOCATION);
+            mX = getArguments().getDouble(ARG_X);
+            mY = getArguments().getDouble(ARG_Y);
         }
+        Log.d("return", mX + "," + mY);
     }
 
     @Override
@@ -103,10 +113,10 @@ public class SaleItemFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d("saleitemfragment", mLocation);
+        Log.d("saleitemfragment", mX + ", " + mY);
         googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(10, 10))
-                .title("Hello world"));
-
+                .position(new LatLng(mX, mY)).title(mItem)).setVisible(true);
     }
 
     /**

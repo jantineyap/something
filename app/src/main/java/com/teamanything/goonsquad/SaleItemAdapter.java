@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Adam on 3/13/2015.
  *
- * Customer Adapter for a ListView which contains three TextViews.
+ * Customer Adapter for a ListView which contains two TextViews.
  */
 public class SaleItemAdapter extends BaseAdapter {
 

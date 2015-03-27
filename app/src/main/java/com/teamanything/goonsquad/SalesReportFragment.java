@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.SaleItem;
 import com.teamanything.goonsquad.database.WishListItem;
@@ -31,7 +38,7 @@ import java.util.List;
  * Use the {@link FriendListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SalesReportFragment extends ListFragment implements View.OnClickListener {
+public class SalesReportFragment extends ListFragment implements View.OnClickListener, OnMapReadyCallback {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String CUR_USER = "CUR_USER";
@@ -41,6 +48,8 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
 
     private EditText etSalesItem;
     private EditText etPrice;
+
+    private LatLng latLng;
 
     private SaleItemAdapter adapter;
 
@@ -102,7 +111,7 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
     public void onListItemClick(ListView l, View v, int position, long id) {
         // do something with the data
         super.onListItemClick(l, v, position, id);
-        mListener.onListItemClick(l, v, position, id);
+        mListener.onListItemClick(adapter.getItem(position));
     }
 
     @Override
@@ -127,6 +136,10 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
                 return false;
             }
         });
+
+        SupportMapFragment supportMapFragment = SupportMapFragment.newInstance();
+        supportMapFragment.getMapAsync(this);
+        getFragmentManager().beginTransaction().add(R.id.map_container, supportMapFragment).commit();
 
         view.findViewById(R.id.button_add).setOnClickListener(this);
         return view;
@@ -162,7 +175,7 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
             } else {
                 price = 0.0;
             }
-            SaleItem saleItem = new SaleItem(etSalesItem.getText().toString(), price);
+            SaleItem saleItem = new SaleItem(etSalesItem.getText().toString(), price, Double.toString(latLng.latitude), Double.toString(latLng.longitude));
             if (mListener.onAddClick(saleItem)) {
                 add(saleItem);
 
@@ -180,6 +193,31 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
             imm.hideSoftInputFromWindow(etPrice.getWindowToken(), 0);
         }
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(new LatLng(33.75, -84.39)).draggable(true);
+        googleMap.addMarker(markerOptions);
+        latLng = markerOptions.getPosition();
+        googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                latLng = marker.getPosition();
+            }
+        });
+
+    }
+
 
     // returns true if all fields are error free
     private boolean checkError() {
@@ -228,6 +266,6 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
      */
     public interface OnFragmentInteractionListener {
         public boolean onAddClick(SaleItem saleItem);
-        public void onListItemClick(ListView l, View v, int position, long id);
+        public void onListItemClick(SaleItem saleItem);
     }
 }

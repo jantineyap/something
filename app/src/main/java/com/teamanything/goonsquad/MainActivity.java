@@ -230,8 +230,8 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        SaleItem saleItem = ((SaleItemAdapter) l.getAdapter()).getItem(position);
+    @Override // from SalesReportFragment
+    public void onListItemClick(SaleItem saleItem) {
         Fragment newFragment = SaleItemFragment.newInstance(saleItem);
         getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container, newFragment).commit();
     }

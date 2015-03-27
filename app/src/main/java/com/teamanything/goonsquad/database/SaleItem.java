@@ -15,14 +15,16 @@ public class SaleItem {
 
     public SaleItem() {
         item = "item";
-        x = "0";
-        y = "0";
+        x = "33.75";
+        y = "-84.39";
         price = 0.0;
     }
 
     public SaleItem(String item, double price) {
         this.item = item;
         this.price = price;
+        this.x = "33.75";
+        this.y = "-84.39";
     }
 
     public SaleItem(String item, double price, String x, String y) {
@@ -53,8 +55,7 @@ public class SaleItem {
     }
 
     public String getLocation () {
-        String location = x + "," + y;
-        return location;
+        return x + "," + y;
     }
 
     @Override
