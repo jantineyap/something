@@ -3,6 +3,7 @@ package com.teamanything.goonsquad;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -10,8 +11,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
@@ -233,7 +232,11 @@ public class MainActivity extends ActionBarActivity
     @Override // from SalesReportFragment
     public void onListItemClick(SaleItem saleItem) {
         Fragment newFragment = SaleItemFragment.newInstance(saleItem);
-        getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container, newFragment).commit();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        // TODO add animations here
+
+        transaction.addToBackStack(null).replace(R.id.container, newFragment).commit();
     }
 
 }

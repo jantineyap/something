@@ -3,12 +3,12 @@ package com.teamanything.goonsquad;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -75,7 +75,6 @@ public class SaleItemFragment extends Fragment implements OnMapReadyCallback {
             mX = getArguments().getDouble(ARG_X);
             mY = getArguments().getDouble(ARG_Y);
         }
-        Log.d("return", mX + "," + mY);
     }
 
     @Override
@@ -113,10 +112,9 @@ public class SaleItemFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d("saleitemfragment", mLocation);
-        Log.d("saleitemfragment", mX + ", " + mY);
         googleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(mX, mY)).title(mItem)).setVisible(true);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mX, mY), 10.0f));
     }
 
     /**
