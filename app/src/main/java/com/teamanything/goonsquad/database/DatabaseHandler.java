@@ -515,7 +515,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return false;
     }
-
+    /**
+     * delete given saleitem from table
+     *
+     * @param item, the saleitem
+     * @return boolean of success or not
+     */
     public boolean deleteSaleItem(SaleItem item) {
         if (isSaleItem(item)) {
             SQLiteDatabase database = this.getWritableDatabase();
@@ -528,6 +533,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return false;
     }
 
+    /**
+     * Provides a list of all the saleitems in the database
+     *
+     * @return list of available saleitems
+     */
     public List<SaleItem> getSaleList() {
         List<SaleItem> items = new ArrayList<>();
 
@@ -546,7 +556,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return items;
     }
-
+    /**
+     * get a users listed saleitems
+     *
+     * @param user, the user to get the salesitems of
+     * @return boolean of success or not
+     */
     public List<SaleItem> getUserSales(String user) {
         List<SaleItem> items = new ArrayList<>();
 
@@ -566,7 +581,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return items;
     }
-
+    /**
+     * gets the saleitem given the price and the item name
+     * used to find the location for populating the marker on the map
+     *
+     * @param item, the name of the item
+     * @param price, the price of the item
+     * @return saleitem with the given name and price
+     */
     public SaleItem getSaleItem(String item, double price) {
         String selectQuery = "SELECT * FROM " + TABLE_ITEMS;
         SQLiteDatabase db = this.getWritableDatabase();

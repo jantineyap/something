@@ -110,6 +110,12 @@ public class SaleItemFragment extends Fragment implements OnMapReadyCallback {
         mListener = null;
     }
 
+    /**
+     * Map is prepared and a marker is added at the saleItem's position
+     * Textviews are populated with saleItem's data
+     *
+     * @param googleMap, map to work with and add the marker to
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         googleMap.addMarker(new MarkerOptions()
