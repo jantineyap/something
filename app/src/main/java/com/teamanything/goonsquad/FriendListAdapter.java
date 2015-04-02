@@ -7,9 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.teamanything.goonsquad.database.WishListItem;
-
-import java.text.NumberFormat;
 import java.util.List;
 
 /**
