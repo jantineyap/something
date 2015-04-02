@@ -12,7 +12,7 @@ public class SaleItem {
     private String y;
     private double price;
 
-
+    // various constructors for the saleItem
     public SaleItem() {
         item = "item";
         x = "33.75";
@@ -34,6 +34,7 @@ public class SaleItem {
         this.y = y;
     }
 
+    // getters and setters
     public String getItem() {
         return item;
     }
@@ -58,6 +59,7 @@ public class SaleItem {
         return x + "," + y;
     }
 
+    // overridden .equals used for the getSaleItem(item, price) method
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof SaleItem)) { return false; }

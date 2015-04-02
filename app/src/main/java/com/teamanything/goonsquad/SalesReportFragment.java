@@ -108,6 +108,7 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
 
     }
 
+
     public void onListItemClick(ListView l, View v, int position, long id) {
         // do something with the data
         super.onListItemClick(l, v, position, id);
@@ -247,7 +248,11 @@ public class SalesReportFragment extends ListFragment implements View.OnClickLis
         }
         return !cancel;
     }
-
+    /**
+     * uses the adapter to add a saleItem
+     *
+     * @param saleItem, the item to add
+     */
     private void add(SaleItem saleItem) {
         if (!adapter.contains(saleItem)) {
             adapter.add(saleItem);
