@@ -34,7 +34,6 @@ public class SaleItemFragment extends Fragment implements OnMapReadyCallback {
     private static final String ARG_Y = "y";
 
     private String mItem = "";
-    private String mLocation = "";
     private Double mX = 0.0;
     private Double mY = 0.0;
     private Double mPrice = 0.0;
@@ -71,7 +70,6 @@ public class SaleItemFragment extends Fragment implements OnMapReadyCallback {
         if (getArguments() != null) {
             mItem = getArguments().getString(ARG_ITEM);
             mPrice = getArguments().getDouble(ARG_PRICE);
-            mLocation = getArguments().getString(ARG_LOCATION);
             mX = getArguments().getDouble(ARG_X);
             mY = getArguments().getDouble(ARG_Y);
         }

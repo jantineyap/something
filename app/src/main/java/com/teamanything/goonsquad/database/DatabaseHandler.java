@@ -153,6 +153,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor != null) {
             cursor.moveToFirst();
         }
+        assert cursor != null;
         return new User(cursor.getString(0), cursor.getString(1), cursor.getString(2));
     }
 
@@ -226,6 +227,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public boolean addConnection(User user1, User user2) {
         return addConnection(user1.getEmail(), user2.getEmail());
     }
@@ -284,7 +286,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @param email, email of friend
      * @return boolean whether success
      */
-    public boolean isFriends(String user, String email) {
+    boolean isFriends(String user, String email) {
         String selectQuery = "SELECT  * FROM " + TABLE_FRIEND;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -317,7 +319,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @param maxPrice, the desired price
      * @return boolean of success or not
      */
-    public boolean addWish(String user, String item, double maxPrice) {
+    @SuppressWarnings("SameReturnValue")
+    boolean addWish(String user, String item, double maxPrice) {
         if (isWish(user, item)) {
             deleteWish(user, item);
         }
@@ -371,7 +374,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @param item, the wanted item
      * @return boolean of success or not
      */
-    public boolean deleteWish(String user, String item) {
+    boolean deleteWish(String user, String item) {
         if (isWish(user, item)) {
             SQLiteDatabase database = this.getWritableDatabase();
             database.delete(TABLE_WISHLIST, "ROWID = (SELECT Max(ROWID) FROM "
@@ -404,9 +407,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     if (cursor.getString(0).equals(user)) {
                         WishListItem item = new WishListItem(cursor.getString(1), cursor.getDouble(2));
                         if (cursor.getInt(3) == 1) {
-                            item.setMatched(true);
+                            item.setMatched();
                         } else if (saleCheck(cursor.getString(1), cursor.getDouble(2)) != null) {
-                            item.setMatched(true);
+                            item.setMatched();
                             ContentValues value = new ContentValues();
                             value.put(KEY_BOOLEAN, 1);
                             String where = KEY_USER + "=? AND " + KEY_ITEM + "=?";
@@ -461,6 +464,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @param item, the item
      * @return boolean of success or not
      */
+    @SuppressWarnings("SameReturnValue")
     public boolean addItem(SaleItem item) {
         SQLiteDatabase database = this.getWritableDatabase();
         if (isSaleItem(item)) {

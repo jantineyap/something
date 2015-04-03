@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class WishListItemAdapterTest extends AndroidTestCase {
 
-    WishListItemAdapter adapter;
-    List<WishListItem> data;
+    private WishListItemAdapter adapter;
+    private List<WishListItem> data;
 
     @Override
     protected void setUp() throws Exception {

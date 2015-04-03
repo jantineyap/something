@@ -67,7 +67,7 @@ public class RegistrationActivity extends ActionBarActivity {
         db = DatabaseHandler.getInstance(getApplicationContext());
     }
 
-    public void attemptRegistration() {
+    void attemptRegistration() {
         if (mAuthTask != null) {
             return;
         }
@@ -153,8 +153,8 @@ public class RegistrationActivity extends ActionBarActivity {
         return password.length() > 3;
     }
 
-    private void createToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    private void createToast() {
+        Toast.makeText(getApplicationContext(), "Registration failed", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -166,7 +166,7 @@ public class RegistrationActivity extends ActionBarActivity {
         private final String mEmail;
         private final String mPassword;
         private final String mName;
-        private User user;
+        private final User user;
 
         UserRegistrationTask(String email, String name, String password) {
             mEmail = email;
@@ -194,7 +194,7 @@ public class RegistrationActivity extends ActionBarActivity {
                 i.putExtra(ARG_CUR_USER, mEmail);
                 startActivity(i);
             } else {
-                createToast("Registration failed");
+                createToast();
             }
         }
 

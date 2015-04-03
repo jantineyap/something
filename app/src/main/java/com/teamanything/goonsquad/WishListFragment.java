@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
@@ -77,11 +76,6 @@ public class WishListFragment extends ListFragment implements View.OnClickListen
 
         adapter = new WishListItemAdapter(getActivity(), db.getWishlist(curUser));
         setListAdapter(adapter);
-    }
-
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        // do something with the data
-        super.onListItemClick(l, v, position, id);
     }
 
     @Override

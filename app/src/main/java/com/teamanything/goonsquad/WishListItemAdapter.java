@@ -17,14 +17,13 @@ import java.util.List;
  *
  * Customer Adapter for a ListView which contains two TextViews.
  */
-public class WishListItemAdapter extends BaseAdapter {
+class WishListItemAdapter extends BaseAdapter {
 
-    Context context;
-    List<WishListItem> data;
+    private final List<WishListItem> data;
     private static LayoutInflater inflater = null;
 
     public WishListItemAdapter(Context context, List<WishListItem> data) {
-        this.context = context;
+        Context context1 = context;
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

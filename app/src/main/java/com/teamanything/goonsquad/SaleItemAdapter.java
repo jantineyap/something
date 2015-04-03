@@ -17,10 +17,9 @@ import java.util.List;
  *
  * Customer Adapter for a ListView which contains two TextViews.
  */
-public class SaleItemAdapter extends BaseAdapter {
+class SaleItemAdapter extends BaseAdapter {
 
-    Context context;
-    List<SaleItem> data;
+    private final List<SaleItem> data;
     private static LayoutInflater inflater = null;
 
     /**
@@ -28,10 +27,9 @@ public class SaleItemAdapter extends BaseAdapter {
      *
      * @param context, the given context the adapter is called in
      * @param data, the list of saleitems used to populate the list
-     * @return boolean of success or not
      */
     public SaleItemAdapter(Context context, List<SaleItem> data) {
-        this.context = context;
+        Context context1 = context;
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

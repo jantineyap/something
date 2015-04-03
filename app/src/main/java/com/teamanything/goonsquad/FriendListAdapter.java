@@ -14,14 +14,13 @@ import java.util.List;
  *
  * Customer Adapter for a ListView which contains one TextView.
  */
-public class FriendListAdapter extends BaseAdapter {
+class FriendListAdapter extends BaseAdapter {
 
-    Context context;
-    List<String> data;
+    private final List<String> data;
     private static LayoutInflater inflater = null;
 
     public FriendListAdapter(Context context, List<String> data) {
-        this.context = context;
+        Context context1 = context;
         this.data = data;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
