@@ -286,7 +286,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @param email, email of friend
      * @return boolean whether success
      */
-    boolean isFriends(String user, String email) {
+     public boolean isFriends(String user, String email) {
         String selectQuery = "SELECT  * FROM " + TABLE_FRIEND;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
