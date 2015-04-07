@@ -8,6 +8,8 @@ import com.teamanything.goonsquad.database.SaleItem;
 
 /**
  * Created by Carroll on 4/7/2015.
+ *
+ * JUnits for DatabaseHandler and SaleItem
  */
 public class SaleItemTest extends AndroidTestCase {
 
