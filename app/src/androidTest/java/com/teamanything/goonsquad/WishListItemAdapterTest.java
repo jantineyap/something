@@ -10,42 +10,53 @@ import java.util.List;
 /**
  * Created by Adam on 4/2/2015.
  *
- * JUnit Test class for WishListItemAdapter
+ * Tests functionality of WishListItem and WishListItemAdapter
  */
 public class WishListItemAdapterTest extends AndroidTestCase {
 
-    WishListItemAdapter adapter;
-    List<WishListItem> data;
+    private WishListItemAdapter mAdapter;
+    private List<WishListItem> mData;
+    private final int mCount = 5;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        data = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
-            data.add(new WishListItem(Integer.toString(i), i));
+        mData = new ArrayList<>();
+        for (int i = 0; i < mCount; i++) {
+            mData.add(new WishListItem(Integer.toString(i), i));
         }
-        adapter = new WishListItemAdapter(getContext(), data);
+
+        mAdapter = new WishListItemAdapter(getContext(), mData);
     }
 
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        data.clear();
+        mData.clear();
     }
 
     /**
      * Tests for proper count
      */
     public void testCount() {
-        assertEquals(5, adapter.getCount());
+        assertEquals(mCount, mAdapter.getCount());
     }
 
     /**
-     * Tests if WishListItem are stored in correct order with correct price
+     * Tests if WishListItem are stored in WishListItemAdapter with correct order
+     */
+    public void testGetItem() {
+        for (int i = 0; i < mAdapter.getCount(); i++) {
+            assertEquals(new WishListItem(Integer.toString(i), i), mAdapter.getItem(i));
+        }
+    }
+
+    /**
+     * Tests if WishListItem have correct price
      */
     public void testMaxPrice() {
-        for (int i = 0; i < adapter.getCount(); i++) {
-            assertEquals((double) (i + 1), adapter.getItem(i).getMaxPrice());
+        for (int i = 0; i < mAdapter.getCount(); i++) {
+            assertEquals((double) i, mAdapter.getItem(i).getMaxPrice());
         }
     }
 
