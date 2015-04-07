@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "teamanything.com.goonsquad"
+        applicationId "com.teamanything.goonsquad"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 1

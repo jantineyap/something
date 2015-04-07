@@ -2,28 +2,30 @@ package com.teamanything.goonsquad;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.HashSet;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.User;
 
-public class RegistrationActivity extends ActionBarActivity {
 
-    private static final String PREFS_NAME = "LoginInfo";
-    private static final String PREFS_USERS = "users";
+public class RegistrationActivity extends ActionBarActivity {
 
     private UserRegistrationTask mAuthTask = null;
     private DatabaseHandler db;
 
-    private EditText mUsernameView;
+    private static final String ARG_CUR_USER = "CUR_USER";
+
+    private EditText mEmailView;
+    private EditText mNameView;
     private EditText mPasswordView;
     private EditText mPasswordConfirmView;
 
@@ -31,11 +33,22 @@ public class RegistrationActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        mUsernameView = (EditText) findViewById(R.id.email_form);
+        mEmailView = (EditText) findViewById(R.id.email_form);
+        mNameView = (EditText) findViewById(R.id.name_form);
         mPasswordView = (EditText) findViewById(R.id.password_form);
         mPasswordConfirmView = (EditText) findViewById(R.id.password_confirm_form);
+        mPasswordConfirmView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    attemptRegistration();
+                    return true;
+                }
+                return false;
+            }
+        });
 
-        Button mRegisterButton = (Button) findViewById(R.id.register_button);
+        Button mRegisterButton = (Button) findViewById(R.id.button_register);
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,7 +56,7 @@ public class RegistrationActivity extends ActionBarActivity {
             }
         });
 
-        Button mCancelButton = (Button) findViewById(R.id.cancel_button);
+        Button mCancelButton = (Button) findViewById(R.id.button_cancel);
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,30 +64,35 @@ public class RegistrationActivity extends ActionBarActivity {
             }
         });
 
-        db = new DatabaseHandler(getApplicationContext());
+        db = DatabaseHandler.getInstance(getApplicationContext());
     }
 
-    /**
-     * Attempts to register a new user to allow the user to login
-     */
-    public void attemptRegistration() {
+    void attemptRegistration() {
         if (mAuthTask != null) {
             return;
         }
 
         // Reset errors.
-        mUsernameView.setError(null);
+        mEmailView.setError(null);
+        mNameView.setError(null);
         mPasswordView.setError(null);
         mPasswordConfirmView.setError(null);
 
         // Store values at the time of the login attempt.
-        String username = mUsernameView.getText().toString();
+        String email = mEmailView.getText().toString();
+        String name = mNameView.getText().toString();
         String password = mPasswordView.getText().toString();
         String passwordConfirm = mPasswordConfirmView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
+        //checks for name input
+        if (TextUtils.isEmpty(name)) {
+            mNameView.setError(getString(R.string.error_field_required));
+            focusView = mNameView;
+            cancel = true;
+        }
 
         // Check for a valid password.
         if (TextUtils.isEmpty(password)) {
@@ -98,18 +116,18 @@ public class RegistrationActivity extends ActionBarActivity {
             cancel = true;
         }
 
-        // Check for a valid username.
-        if (TextUtils.isEmpty(username)) {
-            mUsernameView.setError(getString(R.string.error_field_required));
-            focusView = mUsernameView;
+        // Check for a valid email.
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
             cancel = true;
-        } else if (!isUsernameValid(username)) {
-            mUsernameView.setError(getString(R.string.error_invalid_username));
-            focusView = mUsernameView;
+        } else if (!isEmailValid(email)) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
             cancel = true;
-        } else if (db.userRegistered(username)) {
-            mUsernameView.setError(getString(R.string.error_taken_username));
-            focusView = mUsernameView;
+        } else if (db.userRegistered(email)) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
             cancel = true;
         }
 
@@ -120,29 +138,23 @@ public class RegistrationActivity extends ActionBarActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            mAuthTask = new UserRegistrationTask(username, password);
+            mAuthTask = new UserRegistrationTask(email, name, password);
             mAuthTask.execute((Void) null);
         }
     }
 
-    /**
-     * Checks to make sure email formatting is correct
-     */
-    private boolean isUsernameValid(String username) {
+    private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return username.length() > 3;
+        return email.length() > 3;
     }
 
-    /**
-     * Checks to make sure password formatting is correct
-     */
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 3;
     }
 
-    private void createToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    private void createToast() {
+        Toast.makeText(getApplicationContext(), "Registration failed", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -151,21 +163,24 @@ public class RegistrationActivity extends ActionBarActivity {
      */
     public class UserRegistrationTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mUsername;
+        private final String mEmail;
         private final String mPassword;
-        private User user;
+        private final String mName;
+        private final User user;
 
-        UserRegistrationTask(String username, String password) {
-            mUsername = username;
+        UserRegistrationTask(String email, String name, String password) {
+            mEmail = email;
             mPassword = password;
-            user = new User(username, password);
+            mName = name;
+            user = new User(mEmail, mName, mPassword);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-
-            if (!db.userRegistered(mUsername)) {
-                return db.addUser(user);
+            if (!db.userRegistered(mEmail)) {
+                boolean val = db.addUser(user);
+                db.addConnection(mEmail, "temp@temp.com");
+                return val;
             }
             return false;
         }
@@ -175,9 +190,11 @@ public class RegistrationActivity extends ActionBarActivity {
             mAuthTask = null;
 
             if (success) {
-                startActivity(new Intent(RegistrationActivity.this.getBaseContext(), MainActivity.class));
+                Intent i = new Intent(RegistrationActivity.this.getBaseContext(), MainActivity.class);
+                i.putExtra(ARG_CUR_USER, mEmail);
+                startActivity(i);
             } else {
-                createToast("Registration failed");
+                createToast();
             }
         }
 
