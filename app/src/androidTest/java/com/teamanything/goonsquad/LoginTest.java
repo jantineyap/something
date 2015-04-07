@@ -7,7 +7,7 @@ import com.teamanything.goonsquad.database.User;
 
 
 /**
- * Created by Sarthak Mohapatra on 4/7/15.
+ * Created by Sarthak Mohapatra on 4/2/15.
  */
 
 public class LoginTest extends AndroidTestCase {
