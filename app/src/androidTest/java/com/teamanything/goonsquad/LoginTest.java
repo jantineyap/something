@@ -1,6 +1,7 @@
 package com.teamanything.goonsquad;
 
 import android.test.AndroidTestCase;
+import android.test.RenamingDelegatingContext;
 
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.User;
@@ -12,11 +13,13 @@ import com.teamanything.goonsquad.database.User;
 
 public class LoginTest extends AndroidTestCase {
 
-    DatabaseHandler db = DatabaseHandler.getInstance(getContext());
+    DatabaseHandler db;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        RenamingDelegatingContext context = new RenamingDelegatingContext(getContext(), "test_");
+        db = DatabaseHandler.getInstance(context);
         User a = new User("abcd@abcd.com", "abcd", "abcd");
         User b = new User("dcba@dcba.com", "dcba", "dcba");
         db.addUser(a);
