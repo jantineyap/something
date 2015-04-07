@@ -35,6 +35,7 @@ public class LoginTest extends AndroidTestCase {
 
     @Override
     protected void tearDown() throws Exception {
+        db.close();
         super.tearDown();
     }
 
