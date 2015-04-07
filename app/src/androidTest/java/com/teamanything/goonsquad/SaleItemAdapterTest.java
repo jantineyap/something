@@ -16,7 +16,7 @@ public class SaleItemAdapterTest extends AndroidTestCase {
 
     private SaleItemAdapter mAdapter;
     private List<SaleItem> mData;
-    private final int mCount = 5;
+    private final int mCount = 5; // must be >= 1
 
     @Override
     protected void setUp() throws Exception {

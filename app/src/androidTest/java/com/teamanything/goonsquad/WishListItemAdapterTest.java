@@ -16,7 +16,7 @@ public class WishListItemAdapterTest extends AndroidTestCase {
 
     private WishListItemAdapter mAdapter;
     private List<WishListItem> mData;
-    private final int mCount = 5;
+    private final int mCount = 5; // must be >= 1
 
     @Override
     protected void setUp() throws Exception {
@@ -49,6 +49,34 @@ public class WishListItemAdapterTest extends AndroidTestCase {
         for (int i = 0; i < mAdapter.getCount(); i++) {
             assertEquals(new WishListItem(Integer.toString(i), i), mAdapter.getItem(i));
         }
+    }
+
+    /**
+     * Tests if WishListItemAdapter.contains operates properly
+     */
+    public void testContains() {
+        assertTrue(mAdapter.contains(new WishListItem("0", 0)));
+        assertFalse(mAdapter.contains(new WishListItem("goonsquad", 0)));
+    }
+
+    /**
+     * Tests if WishListItemAdapter.add correctly adds
+     */
+    public void testAdd() {
+        assertEquals(mCount, mAdapter.getCount());
+        mAdapter.add(new WishListItem("goonsquad", 420));
+        assertEquals(mCount + 1, mAdapter.getCount());
+        assertTrue(mAdapter.contains(new WishListItem("goonsquad", 420)));
+    }
+
+    /**
+     * Tests if WishListItemAdapter.remove correctly removes
+     */
+    public void testRemove() {
+        assertEquals(mCount, mAdapter.getCount());
+        mAdapter.remove(new WishListItem("0", 0));
+        assertEquals(mCount - 1, mAdapter.getCount());
+        assertFalse(mAdapter.contains(new WishListItem("0", 0)));
     }
 
     /**
