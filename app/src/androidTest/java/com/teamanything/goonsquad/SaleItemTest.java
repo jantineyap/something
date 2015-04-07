@@ -3,10 +3,8 @@ package com.teamanything.goonsquad;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 
-import com.google.android.gms.common.data.DataBufferObserverSet;
 import com.teamanything.goonsquad.database.DatabaseHandler;
 import com.teamanything.goonsquad.database.SaleItem;
-import com.teamanything.goonsquad.database.User;
 
 /**
  * Created by Carroll on 4/7/2015.
@@ -21,7 +19,7 @@ public class SaleItemTest extends AndroidTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         RenamingDelegatingContext context = new RenamingDelegatingContext(getContext(), "test");
-
+        db = DatabaseHandler.getInstance(context);
         db.addItem(a);
         db.addItem(b);
     }
