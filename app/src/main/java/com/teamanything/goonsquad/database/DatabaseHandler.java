@@ -423,7 +423,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
-    private SaleItem saleCheck(String item, double price) {
+    public SaleItem saleCheck(String item, double price) {
         String selectQuery = "SELECT * FROM " + TABLE_ITEMS;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -491,7 +491,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @param item, the item
      * @return boolean whether or not item exists
      */
-    private boolean isSaleItem(SaleItem item) {
+    public boolean isSaleItem(SaleItem item) {
         //Select query
         String selectQuery = "SELECT  * FROM " + TABLE_ITEMS;
         SQLiteDatabase db = this.getWritableDatabase();
