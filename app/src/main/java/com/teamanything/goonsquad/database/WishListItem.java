@@ -7,15 +7,17 @@ package com.teamanything.goonsquad.database;
  */
 public class WishListItem {
 
-    private String item;
+    private final String item;
     private double maxPrice;
     private boolean isMatched;
 
-    public WishListItem() {
-        item = "";
-        maxPrice = 0.0;
-        isMatched = false;
-    }
+// --Commented out by Inspection START (4/3/15, 1:40 PM):
+//    public WishListItem() {
+//        item = "";
+//        maxPrice = 0.0;
+//        isMatched = false;
+//    }
+// --Commented out by Inspection STOP (4/3/15, 1:40 PM)
 
     public WishListItem(String item, double maxPrice) {
         this.item = item;
@@ -31,16 +33,18 @@ public class WishListItem {
         return maxPrice;
     }
 
-    public void setMaxPrice(double maxPrice) {
-        this.maxPrice = maxPrice;
-    }
+// --Commented out by Inspection START (4/3/15, 1:40 PM):
+//    public void setMaxPrice(double maxPrice) {
+//        this.maxPrice = maxPrice;
+//    }
+// --Commented out by Inspection STOP (4/3/15, 1:40 PM)
 
     public boolean isMatched() {
         return isMatched;
     }
 
-    public void setMatched(boolean matched) {
-        isMatched = matched;
+    public void setMatched() {
+        isMatched = true;
     }
 
     @Override
@@ -51,8 +55,4 @@ public class WishListItem {
         return this.item.equals(that.item) && this.maxPrice == that.maxPrice;
     }
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
 }

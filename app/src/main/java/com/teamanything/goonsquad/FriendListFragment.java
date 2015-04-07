@@ -187,13 +187,13 @@ public class FriendListFragment extends ListFragment implements View.OnClickList
         return !cancel;
     }
 
-    public void add(String email) {
+    void add(String email) {
         if (!adapter.contains(email)) {
             adapter.add(email);
         }
     }
 
-    public void remove(String email) {
+    void remove(String email) {
         if (adapter.contains(email)) {
             adapter.remove(email);
         }

@@ -26,41 +26,41 @@ public class WelcomeActivity extends ActionBarActivity {
         db.addUser(new User("temp@temp.com", "temp", "temp"));
     }
 
-    public void openLoginActivity(View view) {
+    public void openLoginActivity(@SuppressWarnings("UnusedParameters") View view) {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-    public void openRegistrationActivity(View view) {
+    public void openRegistrationActivity(@SuppressWarnings("UnusedParameters") View view) {
         startActivity(new Intent(this, RegistrationActivity.class));
     }
 
-    public void setupDatabase(View view) {
+    public void setupDatabase(@SuppressWarnings("UnusedParameters") View view) {
         DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
 
-        boolean success = false;
+        boolean success;
 
         User a = new User("aaaa@aaaa.com", "aaaa", "aaaa");
         User b = new User("bbbb@bbbb.com", "bbbb", "bbbb");
         User c = new User("cccc@cccc.com", "cccc", "cccc");
-        success = db.addUser(a);
-        success = db.addUser(b);
-        success = db.addUser(c);
-        success = db.addConnection(a, b);
-        success = db.addConnection(a, c);
+        db.addUser(a);
+        db.addUser(b);
+        db.addUser(c);
+        db.addConnection(a, b);
+        db.addConnection(a, c);
 
         SaleItem s1 = new SaleItem("Item 1", 1.0);
         SaleItem s2 = new SaleItem("Item 2", 2.0);
         SaleItem s3 = new SaleItem("Item 3", 3.0);
-        success = db.addItem(s1);
-        success = db.addItem(s2);
-        success = db.addItem(s3);
+        db.addItem(s1);
+        db.addItem(s2);
+        db.addItem(s3);
 
         WishListItem w1 = new WishListItem("Item 1", 3.0);
         WishListItem w2 = new WishListItem("Item 2", 1.0);
         WishListItem w3 = new WishListItem("Item 2", 2.0);
-        success = db.addWish(a, w1);
-        success = db.addWish(a, w2);
-        success = db.addWish(b, w3);
+        db.addWish(a, w1);
+        db.addWish(a, w2);
+        db.addWish(b, w3);
         success = db.addWish(c, w3);
 
         if (success) {

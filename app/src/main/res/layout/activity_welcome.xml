@@ -9,7 +9,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to Login"
+        android:text="@string/go_to_login"
         android:id="@+id/go_to_sign_in_button"
         android:onClick="openLoginActivity"
         android:layout_centerHorizontal="true"
@@ -18,7 +18,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to Registration"
+        android:text="@string/go_to_registration"
         android:id="@+id/go_to_registration_button"
         android:onClick="openRegistrationActivity"
         android:layout_below="@+id/go_to_sign_in_button"
@@ -27,7 +27,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="setup database"
+        android:text="@string/setup_database"
         android:id="@+id/button_setup_database"
         android:onClick="setupDatabase"
         android:layout_alignParentBottom="true"

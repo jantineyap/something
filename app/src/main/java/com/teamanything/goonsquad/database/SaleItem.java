@@ -7,9 +7,9 @@ package com.teamanything.goonsquad.database;
  */
 public class SaleItem {
 
-    private String item;
-    private String x;
-    private String y;
+    private final String item;
+    private final String x;
+    private final String y;
     private double price;
 
     // various constructors for the saleItem
@@ -68,8 +68,4 @@ public class SaleItem {
         return this.item.equals(that.item) && this.price == that.price;
     }
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
 }
