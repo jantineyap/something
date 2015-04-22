@@ -250,6 +250,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }*/
         return userLists;
     }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean deleteUser(User user){
+        if (!userRegistered(user.getEmail())) {
+            return false;
+        }
+        //parse stuff
+        final List<ParseObject> object = new ArrayList<>();
+        ParseQuery<ParseObject> query = new ParseQuery<>("User");
+        query.whereEqualTo(KEY_EMAIL, user.getEmail());
+        try {
+            object.add(query.getFirst());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        ParseObject userObj = object.remove(0);
+        userObj.deleteInBackground();
+        return true;
+    }
+
     /**
      * getFriends method that takes a user String and returns a friendslist
      *
