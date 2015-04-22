@@ -13,6 +13,8 @@ import com.teamanything.goonsquad.database.SaleItem;
 import com.teamanything.goonsquad.database.User;
 import com.teamanything.goonsquad.database.WishListItem;
 
+import com.parse.*;
+
 
 public class WelcomeActivity extends ActionBarActivity {
 
@@ -23,7 +25,12 @@ public class WelcomeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         DatabaseHandler db = DatabaseHandler.getInstance(getApplicationContext());
+
+        Parse.enableLocalDatastore(this);
+        Parse.initialize(this, "ZYFdwQMTPNSbrYYnmsrFe2yUNSfvX9gKpJWvTvuK", "TR6wWUoJHsUNS7dPODb4a70NpE9UIUif1rEiFvoe");
+
         db.addUser(new User("temp@temp.com", "temp", "temp"));
+
     }
 
     public void openLoginActivity(@SuppressWarnings("UnusedParameters") View view) {
