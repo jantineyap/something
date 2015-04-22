@@ -251,6 +251,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return userLists;
     }
 
+    /**
+     * Deletes user from database
+     *
+     * @param user
+     * @return boolean of success
+     */
     @SuppressWarnings("UnusedReturnValue")
     public boolean deleteUser(User user) {
         if (!userRegistered(user.getEmail())) {
