@@ -252,11 +252,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public boolean deleteUser(User user){
+    public boolean deleteUser(User user) {
         if (!userRegistered(user.getEmail())) {
             return false;
         }
-        //parse stuff
+        //parse
         final List<ParseObject> object = new ArrayList<>();
         ParseQuery<ParseObject> query = new ParseQuery<>("User");
         query.whereEqualTo(KEY_EMAIL, user.getEmail());
