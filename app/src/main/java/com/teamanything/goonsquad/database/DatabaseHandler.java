@@ -263,16 +263,38 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             return false;
         }
         //parse
-        final List<ParseObject> object = new ArrayList<>();
-        ParseQuery<ParseObject> query = new ParseQuery<>("User");
-        query.whereEqualTo(KEY_EMAIL, user.getEmail());
+        //delete user connections
+        List<String> friends = getFriends(user.getEmail());
+        for(int i = 0;  i < friends.size(); i++){
+            deleteConnection(user.getEmail(), friends.get(i));
+        }
+
+        //delete user wishes
+        final List<ParseObject> items = new ArrayList<>();
+        ParseQuery<ParseObject> itemquery = new ParseQuery<>("WishItem");
+        itemquery.whereEqualTo(KEY_USER, user.getEmail());
         try {
-            object.add(query.getFirst());
+            items.addAll(itemquery.find());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < items.size(); i++) {
+            ParseObject itemObj = items.get(0);
+            itemObj.deleteInBackground();
+        }
+
+        //delete user
+        final List<ParseObject> object = new ArrayList<>();
+        ParseQuery<ParseObject> userquery = new ParseQuery<>("User");
+        userquery.whereEqualTo(KEY_EMAIL, user.getEmail());
+        try {
+            object.add(userquery.getFirst());
         } catch (ParseException e) {
             e.printStackTrace();
         }
         ParseObject userObj = object.remove(0);
         userObj.deleteInBackground();
+
         return true;
     }
 
