@@ -9,6 +9,8 @@ import com.teamanything.goonsquad.database.User;
 
 /**
  * Created by Sarthak Mohapatra on 4/2/15.
+ *
+ * JUnits for DatabaseHandler and LoginUseCase
  */
 
 public class LoginTest extends AndroidTestCase {
@@ -30,7 +32,7 @@ public class LoginTest extends AndroidTestCase {
     public void testLogin() throws Exception {
         assertTrue(db.userRegistered("dcba@dcba.com"));
         assertTrue(db.userRegistered("abcd@abcd.com"));
-        assertTrue(db.isFriends("abcd", "dcba@dcba.com"));
+        assertTrue(db.isFriends("abcd@abcd.com", "dcba@dcba.com"));
     }
 
     @Override
