@@ -1,14 +1,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_user"
     android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:layout_gravity="center" android:orientation="vertical"  >
+    android:layout_gravity="center" android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView_email" android:text="@string/your_email"
-        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginBottom="5dp" />
 
     <TextView
         android:id="@+id/textView_name" android:text="@string/your_name"
-        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="#000000" />
 
 </LinearLayout>

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by David on 4/2/2015.
  *
- * Tests functionality of FriendListAdapter
+ * JUnit Test class for Adapter
  */
 public class FriendListAdapterTest extends AndroidTestCase {
 
