@@ -8,6 +8,8 @@
         android:text= "@string/friend"
         android:padding="4dp"
         android:textAppearance="?android:attr/textAppearanceListItem"
-        android:id="@+id/textView_Friend"/>
+        android:id="@+id/textView_Friend"
+        android:textStyle="bold"
+        android:textColor="#000000" />
 
 </LinearLayout>
